@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import OptionSelector from '@/app/components/OptionSelector';
+import PromptResult from '@/app/components/PromptResult';
 import { categories } from '@/app/data/options';
+import { generatePrompt } from '@/app/utils/promptGenerator';
 
 export default function Home() {
   // 状态管理：三个类别的选择
@@ -10,14 +12,31 @@ export default function Home() {
   const [selectedCharacter, setSelectedCharacter] = useState<string>('');
   const [selectedRelationship, setSelectedRelationship] = useState<string>('');
 
+  // 生成的提示词
+  const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
+
   // 检查是否所有选项都已选择
   const isAllSelected = selectedWorldview && selectedCharacter && selectedRelationship;
 
-  // 生成提示词（目前只是占位）
+  // 生成提示词
   const handleGenerate = () => {
     if (!isAllSelected) return;
-    // TODO: 实现生成逻辑
-    alert('生成功能即将推出！');
+
+    const prompt = generatePrompt(
+      selectedWorldview,
+      selectedCharacter,
+      selectedRelationship
+    );
+
+    setGeneratedPrompt(prompt);
+
+    // 平滑滚动到结果区域
+    setTimeout(() => {
+      const resultElement = document.getElementById('prompt-result');
+      if (resultElement) {
+        resultElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   return (
@@ -88,6 +107,13 @@ export default function Home() {
               {!selectedCharacter && ' AI人设'}
               {!selectedRelationship && ' 关系动态'}
             </p>
+          </div>
+        )}
+
+        {/* 生成结果展示区域 */}
+        {generatedPrompt && (
+          <div id="prompt-result" className="scroll-mt-4">
+            <PromptResult prompt={generatedPrompt} />
           </div>
         )}
       </div>
