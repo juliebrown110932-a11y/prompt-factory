@@ -4,7 +4,8 @@ import { useState } from 'react';
 import OptionSelector from '@/app/components/OptionSelector';
 import PromptResult from '@/app/components/PromptResult';
 import { categories } from '@/app/data/options';
-import { WORLDS, WorldMother, WorldBranch } from '@/app/data/schema';
+import { WORLDS } from '@/app/data/worlds';
+import { WorldMother, WorldBranch } from '@/app/data/schema';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 
 export default function Home() {
@@ -127,6 +128,67 @@ export default function Home() {
                     );
                   })}
                 </div>
+              </div>
+            )}
+
+            {/* 世界观预览面板 */}
+            {selectedMotherId && (
+              <div className="mt-6 p-4 sm:p-6 bg-white rounded-xl shadow-md border border-gray-100">
+                {(() => {
+                  const mother = WORLDS.find(m => m.id === selectedMotherId)!;
+                  const branch = selectedBranchId ? mother.children.find(b => b.id === selectedBranchId) : null;
+
+                  return (
+                    <div className="space-y-4">
+                      {/* 母观信息 */}
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+                          {mother.label}
+                        </h3>
+                        {mother.tagline && (
+                          <p className="text-sm sm:text-base text-purple-600 italic mb-3">
+                            {mother.tagline}
+                          </p>
+                        )}
+                        {mother.summary && (
+                          <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                            {mother.summary}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 分支信息（仅当已选分支） */}
+                      {branch && branch.branchBrief && (
+                        <div className="pt-4 border-t border-gray-200">
+                          <h4 className="text-sm font-semibold text-gray-600 mb-2">
+                            {branch.label}
+                          </h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">
+                            {branch.branchBrief}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* 未选分支提示 */}
+                      {!selectedBranchId && (
+                        <div className="pt-4 border-t border-gray-200">
+                          <p className="text-sm text-gray-500 italic">
+                            请选择一个分支以查看详细介绍
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+
+            {/* 空状态提示 */}
+            {!selectedMotherId && (
+              <div className="mt-6 p-6 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 text-center">
+                <p className="text-sm text-gray-500">
+                  请选择世界观与分支，查看详细设定
+                </p>
               </div>
             )}
           </div>
