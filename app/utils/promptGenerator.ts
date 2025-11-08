@@ -1,8 +1,8 @@
 import {
   characterOptions,
-  relationshipOptions,
   type Option,
 } from '@/app/data/options';
+import { RELATIONS } from '@/app/data/relations';
 
 /**
  * 根据 ID 查找选项
@@ -67,6 +67,23 @@ function getWorldviewDescription(branchId: string): { label: string; description
 }
 
 /**
+ * 根据 arc ID 获取关系动态描述
+ */
+function getRelationDescription(arcId: string): { label: string; description: string } | null {
+  for (const theme of RELATIONS) {
+    for (const arc of theme.arcs) {
+      if (arc.id === arcId) {
+        return {
+          label: `${theme.label} · ${arc.label}`,
+          description: `**起点**\n${arc.start}\n\n**转折**\n${arc.turn}\n\n**终点**\n${arc.end}`
+        };
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * 生成完整的AI角色扮演提示词
  */
 export function generatePrompt(
@@ -76,7 +93,7 @@ export function generatePrompt(
 ): string {
   const worldview = getWorldviewDescription(worldviewId);
   const character = findOption(characterOptions, characterId);
-  const relationship = findOption(relationshipOptions, relationshipId);
+  const relationship = getRelationDescription(relationshipId);
 
   if (!worldview || !character || !relationship) {
     return '错误：请确保所有选项都已正确选择';

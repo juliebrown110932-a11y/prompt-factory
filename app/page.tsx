@@ -5,6 +5,7 @@ import OptionSelector from '@/app/components/OptionSelector';
 import PromptResult from '@/app/components/PromptResult';
 import { categories } from '@/app/data/options';
 import { WORLDS } from '@/app/data/worlds';
+import { RELATIONS, type RelationTheme } from '@/app/data/relations';
 import { WorldMother, WorldBranch } from '@/app/data/schema';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 
@@ -13,20 +14,29 @@ export default function Home() {
   const [selectedMotherId, setSelectedMotherId] = useState<WorldMother['id'] | null>(null);
   const [selectedBranchId, setSelectedBranchId] = useState<WorldBranch['id'] | null>(null);
 
-  // 状态管理：AI人设和关系动态的选择
+  // 状态管理：AI人设选择
   const [selectedCharacter, setSelectedCharacter] = useState<string>('');
-  const [selectedRelationship, setSelectedRelationship] = useState<string>('');
+
+  // 状态管理：关系动态两级选择
+  const [selectedRelationThemeId, setSelectedRelationThemeId] = useState<RelationTheme['id'] | null>(null);
+  const [selectedRelationArcId, setSelectedRelationArcId] = useState<string | null>(null);
 
   // 生成的提示词
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
 
   // 检查是否所有选项都已选择
-  const isAllSelected = selectedBranchId && selectedCharacter && selectedRelationship;
+  const isAllSelected = selectedBranchId && selectedCharacter && selectedRelationArcId;
 
   // 切换母观时重置子分支
   const onSelectMother = (id: WorldMother['id']) => {
     setSelectedMotherId(id);
     setSelectedBranchId(null);
+  };
+
+  // 切换关系主题时重置曲线
+  const onSelectRelationTheme = (id: RelationTheme['id']) => {
+    setSelectedRelationThemeId(id);
+    setSelectedRelationArcId(null);
   };
 
   // 生成提示词
@@ -36,7 +46,7 @@ export default function Home() {
     const prompt = generatePrompt(
       selectedBranchId,
       selectedCharacter,
-      selectedRelationship
+      selectedRelationArcId
     );
 
     setGeneratedPrompt(prompt);
@@ -201,13 +211,151 @@ export default function Home() {
             onSelect={setSelectedCharacter}
           />
 
-          {/* 关系动态选择器 */}
-          <OptionSelector
-            title={categories[2].title}
-            options={categories[2].options}
-            selectedId={selectedRelationship}
-            onSelect={setSelectedRelationship}
-          />
+          {/* 关系动态选择器 - 两级点选 */}
+          <div className="w-full">
+            {/* 类别标题 */}
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 px-2">
+              关系动态
+            </h2>
+
+            {/* 第一级：主题按钮 */}
+            <div className="mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
+                {RELATIONS.map((theme) => {
+                  const isSelected = selectedRelationThemeId === theme.id;
+                  return (
+                    <button
+                      key={theme.id}
+                      onClick={() => onSelectRelationTheme(theme.id)}
+                      aria-pressed={isSelected}
+                      className={`
+                        min-h-[56px] px-4 py-3 rounded-xl font-medium text-sm sm:text-base
+                        transition-all duration-200
+                        active:scale-95
+                        ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white shadow-lg scale-105'
+                            : 'bg-white text-gray-700 hover:bg-gray-50 shadow-sm hover:shadow-md border-2 border-gray-100'
+                        }
+                      `}
+                    >
+                      {theme.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 第二级：曲线按钮（仅当已选主题） */}
+            {selectedRelationThemeId && (
+              <div className="pl-0 sm:pl-4">
+                <p className="text-sm text-gray-600 mb-2 px-2">选择情感曲线：</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
+                  {RELATIONS.find(t => t.id === selectedRelationThemeId)!.arcs.map((arc) => {
+                    const isSelected = selectedRelationArcId === arc.id;
+                    return (
+                      <button
+                        key={arc.id}
+                        onClick={() => setSelectedRelationArcId(arc.id)}
+                        aria-pressed={isSelected}
+                        className={`
+                          min-h-[48px] px-4 py-2 rounded-lg font-medium text-sm
+                          transition-all duration-200
+                          active:scale-95
+                          ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 text-white shadow-md scale-105'
+                              : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md border border-gray-200'
+                          }
+                        `}
+                      >
+                        {arc.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* 关系动态预览面板 */}
+            {selectedRelationThemeId && (
+              <div className="mt-6 p-4 sm:p-6 bg-white rounded-xl shadow-md border border-gray-100">
+                {(() => {
+                  const theme = RELATIONS.find(t => t.id === selectedRelationThemeId)!;
+                  const arc = selectedRelationArcId ? theme.arcs.find(a => a.id === selectedRelationArcId) : null;
+
+                  return (
+                    <div className="space-y-4">
+                      {/* 主题信息 */}
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
+                          {theme.label}
+                        </h3>
+                        {theme.description && (
+                          <p className="text-sm sm:text-base text-purple-600 italic">
+                            {theme.description}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* 曲线信息（仅当已选曲线） */}
+                      {arc && (
+                        <div className="pt-4 border-t border-gray-200">
+                          <h4 className="text-sm font-semibold text-gray-600 mb-3">
+                            {arc.label}
+                          </h4>
+                          <ol className="space-y-3">
+                            <li className="flex items-start">
+                              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-600 text-xs font-bold flex items-center justify-center mr-3 mt-0.5">
+                                1
+                              </span>
+                              <span className="text-sm text-gray-700 leading-relaxed">
+                                {arc.start}
+                              </span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-100 text-purple-600 text-xs font-bold flex items-center justify-center mr-3 mt-0.5">
+                                2
+                              </span>
+                              <span className="text-sm text-gray-700 leading-relaxed">
+                                {arc.turn}
+                              </span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-bold flex items-center justify-center mr-3 mt-0.5">
+                                3
+                              </span>
+                              <span className="text-sm text-gray-700 leading-relaxed">
+                                {arc.end}
+                              </span>
+                            </li>
+                          </ol>
+                        </div>
+                      )}
+
+                      {/* 未选曲线提示 */}
+                      {!selectedRelationArcId && (
+                        <div className="pt-4 border-t border-gray-200">
+                          <p className="text-sm text-gray-500 italic">
+                            请选择一条情感曲线以查看详细发展路径
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+
+            {/* 空状态提示 */}
+            {!selectedRelationThemeId && (
+              <div className="mt-6 p-6 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 text-center">
+                <p className="text-sm text-gray-500">
+                  请选择关系主题与情感曲线，查看发展路径
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 生成按钮 - 固定在底部（移动端友好） */}
@@ -236,7 +384,7 @@ export default function Home() {
               还需选择：
               {!selectedBranchId && ' 世界观'}
               {!selectedCharacter && ' AI人设'}
-              {!selectedRelationship && ' 关系动态'}
+              {!selectedRelationArcId && ' 关系动态'}
             </p>
           </div>
         )}
