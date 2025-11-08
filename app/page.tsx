@@ -8,6 +8,7 @@ import { WORLDS } from '@/app/data/worlds';
 import { RELATIONS, type RelationTheme } from '@/app/data/relations';
 import { WorldMother, WorldBranch } from '@/app/data/schema';
 import { generatePrompt } from '@/app/utils/promptGenerator';
+import { computeCompat, COMPAT_THRESHOLD } from '@/app/logic/compat';
 
 export default function Home() {
   // 状态管理：世界观两级选择
@@ -20,6 +21,9 @@ export default function Home() {
   // 状态管理：关系动态两级选择
   const [selectedRelationThemeId, setSelectedRelationThemeId] = useState<RelationTheme['id'] | null>(null);
   const [selectedRelationArcId, setSelectedRelationArcId] = useState<string | null>(null);
+
+  // 兼容度补丁展开状态
+  const [showPatches, setShowPatches] = useState(false);
 
   // 生成的提示词
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
@@ -357,6 +361,92 @@ export default function Home() {
             )}
           </div>
         </div>
+
+        {/* 兼容度评分卡片 */}
+        {isAllSelected && (() => {
+          const compatResult = computeCompat({
+            worldBranchId: selectedBranchId,
+            characterArchetypeId: selectedCharacter,
+            relationThemeId: selectedRelationArcId,
+          });
+
+          return (
+            <div className="mt-8 p-4 sm:p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-md border border-purple-100">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                  兼容度评估
+                </h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">分数:</span>
+                  <span className={`text-2xl font-bold ${
+                    compatResult.score >= COMPAT_THRESHOLD
+                      ? 'text-green-600'
+                      : compatResult.score >= 50
+                      ? 'text-yellow-600'
+                      : 'text-red-600'
+                  }`}>
+                    {compatResult.score}
+                  </span>
+                  <span className="text-sm text-gray-500">/ 100</span>
+                </div>
+              </div>
+
+              {/* 分数条 */}
+              <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                <div
+                  className={`h-full transition-all duration-500 ${
+                    compatResult.score >= COMPAT_THRESHOLD
+                      ? 'bg-gradient-to-r from-green-400 to-green-600'
+                      : compatResult.score >= 50
+                      ? 'bg-gradient-to-r from-yellow-400 to-yellow-600'
+                      : 'bg-gradient-to-r from-red-400 to-red-600'
+                  }`}
+                  style={{ width: `${compatResult.score}%` }}
+                />
+              </div>
+
+              {/* 补丁列表 */}
+              {compatResult.patches.length > 0 && (
+                <div className="mt-4">
+                  <button
+                    onClick={() => setShowPatches(!showPatches)}
+                    className="flex items-center gap-2 text-sm font-semibold text-purple-700 hover:text-purple-900 transition-colors"
+                  >
+                    <span>设定补丁 ({compatResult.patches.length})</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${showPatches ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {showPatches && (
+                    <ul className="mt-3 space-y-2">
+                      {compatResult.patches.map((patch, index) => (
+                        <li
+                          key={index}
+                          className="text-sm text-gray-700 bg-white p-3 rounded-lg border border-purple-100"
+                        >
+                          {patch}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              {/* 高分提示 */}
+              {compatResult.patches.length === 0 && (
+                <p className="text-sm text-green-700 italic">
+                  ✨ 完美组合！无需额外设定补丁
+                </p>
+              )}
+            </div>
+          );
+        })()}
 
         {/* 生成按钮 - 固定在底部（移动端友好） */}
         <div className="sticky bottom-4 mt-8 sm:mt-12 flex justify-center">
