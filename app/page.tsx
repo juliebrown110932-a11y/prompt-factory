@@ -370,79 +370,78 @@ export default function Home() {
             relationThemeId: selectedRelationArcId,
           });
 
+          // 标签判定
+          const badge =
+            compatResult.score >= 85 ? '完美适配'
+            : compatResult.score >= 60 ? '已为你定制'
+            : '自由组合';
+
+          const badgeColor =
+            compatResult.score >= 85 ? 'from-green-500 to-emerald-600'
+            : compatResult.score >= 60 ? 'from-purple-500 to-indigo-600'
+            : 'from-gray-500 to-slate-600';
+
           return (
             <div className="mt-8 p-4 sm:p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-md border border-purple-100">
+              {/* 标签展示 */}
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                   兼容度评估
                 </h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">分数:</span>
-                  <span className={`text-2xl font-bold ${
-                    compatResult.score >= COMPAT_THRESHOLD
-                      ? 'text-green-600'
-                      : compatResult.score >= 50
-                      ? 'text-yellow-600'
-                      : 'text-red-600'
-                  }`}>
-                    {compatResult.score}
-                  </span>
-                  <span className="text-sm text-gray-500">/ 100</span>
-                </div>
+                <span className={`px-4 py-1.5 rounded-full text-sm font-bold text-white bg-gradient-to-r ${badgeColor} shadow-md`}>
+                  {badge}
+                </span>
               </div>
 
-              {/* 分数条 */}
-              <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
-                <div
-                  className={`h-full transition-all duration-500 ${
-                    compatResult.score >= COMPAT_THRESHOLD
-                      ? 'bg-gradient-to-r from-green-400 to-green-600'
-                      : compatResult.score >= 50
-                      ? 'bg-gradient-to-r from-yellow-400 to-yellow-600'
-                      : 'bg-gradient-to-r from-red-400 to-red-600'
-                  }`}
-                  style={{ width: `${compatResult.score}%` }}
-                />
-              </div>
+              {/* 查看详情按钮 */}
+              <button
+                onClick={() => setShowPatches(!showPatches)}
+                className="w-full mt-2 flex items-center justify-center gap-2 text-sm font-semibold text-purple-700 hover:text-purple-900 transition-colors py-2"
+              >
+                <span>{showPatches ? '收起详情' : '查看详情'}</span>
+                <svg
+                  className={`w-4 h-4 transition-transform ${showPatches ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
-              {/* 补丁列表 */}
-              {compatResult.patches.length > 0 && (
-                <div className="mt-4">
-                  <button
-                    onClick={() => setShowPatches(!showPatches)}
-                    className="flex items-center gap-2 text-sm font-semibold text-purple-700 hover:text-purple-900 transition-colors"
-                  >
-                    <span>设定补丁 ({compatResult.patches.length})</span>
-                    <svg
-                      className={`w-4 h-4 transition-transform ${showPatches ? 'rotate-180' : ''}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
+              {/* 展开详情区 */}
+              {showPatches && (
+                <div className="mt-4 pt-4 border-t border-purple-200">
+                  {/* 数值分数（小号） */}
+                  <div className="mb-4 flex items-center gap-2 text-sm text-gray-600">
+                    <span>数值评分:</span>
+                    <span className="font-bold text-purple-700">{compatResult.score}</span>
+                    <span>/ 100</span>
+                  </div>
 
-                  {showPatches && (
-                    <ul className="mt-3 space-y-2">
-                      {compatResult.patches.map((patch, index) => (
-                        <li
-                          key={index}
-                          className="text-sm text-gray-700 bg-white p-3 rounded-lg border border-purple-100"
-                        >
-                          {patch}
-                        </li>
-                      ))}
-                    </ul>
+                  {/* 设定加成列表 */}
+                  {compatResult.patches.length > 0 ? (
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-700 mb-3">
+                        设定加成 ({compatResult.patches.length})
+                      </h4>
+                      <ul className="space-y-2">
+                        {compatResult.patches.map((patch, index) => (
+                          <li
+                            key={index}
+                            className="text-sm text-gray-700 bg-white p-3 rounded-lg border border-purple-100"
+                          >
+                            {patch}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-green-700 italic">
+                      ✨ 完美组合！无需额外设定加成
+                    </p>
                   )}
                 </div>
-              )}
-
-              {/* 高分提示 */}
-              {compatResult.patches.length === 0 && (
-                <p className="text-sm text-green-700 italic">
-                  ✨ 完美组合！无需额外设定补丁
-                </p>
               )}
             </div>
           );
