@@ -4,11 +4,15 @@ import { useState } from 'react';
 import OptionSelector from '@/app/components/OptionSelector';
 import PromptResult from '@/app/components/PromptResult';
 import { categories } from '@/app/data/options';
+import { WORLDS, WorldMother, WorldBranch } from '@/app/data/schema';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 
 export default function Home() {
-  // 状态管理：三个类别的选择
-  const [selectedWorldview, setSelectedWorldview] = useState<string>('');
+  // 状态管理：世界观两级选择
+  const [selectedMotherId, setSelectedMotherId] = useState<WorldMother['id'] | null>(null);
+  const [selectedBranchId, setSelectedBranchId] = useState<WorldBranch['id'] | null>(null);
+
+  // 状态管理：AI人设和关系动态的选择
   const [selectedCharacter, setSelectedCharacter] = useState<string>('');
   const [selectedRelationship, setSelectedRelationship] = useState<string>('');
 
@@ -16,14 +20,20 @@ export default function Home() {
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
 
   // 检查是否所有选项都已选择
-  const isAllSelected = selectedWorldview && selectedCharacter && selectedRelationship;
+  const isAllSelected = selectedBranchId && selectedCharacter && selectedRelationship;
+
+  // 切换母观时重置子分支
+  const onSelectMother = (id: WorldMother['id']) => {
+    setSelectedMotherId(id);
+    setSelectedBranchId(null);
+  };
 
   // 生成提示词
   const handleGenerate = () => {
     if (!isAllSelected) return;
 
     const prompt = generatePrompt(
-      selectedWorldview,
+      selectedBranchId,
       selectedCharacter,
       selectedRelationship
     );
@@ -54,13 +64,72 @@ export default function Home() {
 
         {/* 三个选择器 - 移动端垂直排列 */}
         <div className="space-y-8 sm:space-y-10 lg:space-y-12">
-          {/* 世界观选择器 */}
-          <OptionSelector
-            title={categories[0].title}
-            options={categories[0].options}
-            selectedId={selectedWorldview}
-            onSelect={setSelectedWorldview}
-          />
+          {/* 世界观选择器 - 两级点选 */}
+          <div className="w-full">
+            {/* 类别标题 */}
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 px-2">
+              世界观
+            </h2>
+
+            {/* 第一级：母观按钮 */}
+            <div className="mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
+                {WORLDS.map((mother) => {
+                  const isSelected = selectedMotherId === mother.id;
+                  return (
+                    <button
+                      key={mother.id}
+                      onClick={() => onSelectMother(mother.id)}
+                      aria-pressed={isSelected}
+                      className={`
+                        min-h-[56px] px-4 py-3 rounded-xl font-medium text-sm sm:text-base
+                        transition-all duration-200
+                        active:scale-95
+                        ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white shadow-lg scale-105'
+                            : 'bg-white text-gray-700 hover:bg-gray-50 shadow-sm hover:shadow-md border-2 border-gray-100'
+                        }
+                      `}
+                    >
+                      {mother.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 第二级：子分支按钮（仅当已选母观） */}
+            {selectedMotherId && (
+              <div className="pl-0 sm:pl-4">
+                <p className="text-sm text-gray-600 mb-2 px-2">选择具体分支：</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
+                  {WORLDS.find(m => m.id === selectedMotherId)!.children.map((branch) => {
+                    const isSelected = selectedBranchId === branch.id;
+                    return (
+                      <button
+                        key={branch.id}
+                        onClick={() => setSelectedBranchId(branch.id)}
+                        aria-pressed={isSelected}
+                        className={`
+                          min-h-[48px] px-4 py-2 rounded-lg font-medium text-sm
+                          transition-all duration-200
+                          active:scale-95
+                          ${
+                            isSelected
+                              ? 'bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 text-white shadow-md scale-105'
+                              : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm hover:shadow-md border border-gray-200'
+                          }
+                        `}
+                      >
+                        {branch.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* AI 人设选择器 */}
           <OptionSelector
@@ -103,7 +172,7 @@ export default function Home() {
           <div className="mt-6 text-center">
             <p className="text-xs sm:text-sm text-gray-500">
               还需选择：
-              {!selectedWorldview && ' 世界观'}
+              {!selectedBranchId && ' 世界观'}
               {!selectedCharacter && ' AI人设'}
               {!selectedRelationship && ' 关系动态'}
             </p>
