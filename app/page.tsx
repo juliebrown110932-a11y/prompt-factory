@@ -9,10 +9,12 @@ import { WorldStep } from '@/app/components/steps/WorldStep';
 import { SelectionPreview } from '@/app/components/SelectionPreview';
 import PromptResult from '@/app/components/PromptResult';
 import { generatePrompt } from '@/app/utils/promptGenerator';
+import type { IntroTone } from '@/app/utils/introComposer';
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
+  const [introTone, setIntroTone] = useState<IntroTone>('balanced');
 
   const {
     characterMotherId,
@@ -61,7 +63,7 @@ export default function Home() {
   const handleGenerate = () => {
     if (!worldBranchId || !archetypeId || !relationArcId) return;
 
-    const prompt = generatePrompt(worldBranchId, archetypeId, relationArcId);
+    const prompt = generatePrompt(worldBranchId, archetypeId, relationArcId, introTone);
     setGeneratedPrompt(prompt);
 
     // 平滑滚动到结果区域
@@ -108,7 +110,7 @@ export default function Home() {
         onNext={handleNext}
         onGenerate={handleGenerate}
         canProceed={canProceed}
-        preview={<SelectionPreview />}
+        preview={<SelectionPreview introTone={introTone} setIntroTone={setIntroTone} />}
       >
         {renderStepContent()}
       </WizardLayout>

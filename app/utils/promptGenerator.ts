@@ -3,6 +3,7 @@ import {
   type Option,
 } from '@/app/data/options';
 import { RELATIONS } from '@/app/data/relations';
+import { composeIntro, type IntroTone } from '@/app/utils/introComposer';
 
 /**
  * 根据 ID 查找选项
@@ -89,7 +90,8 @@ function getRelationDescription(arcId: string): { label: string; description: st
 export function generatePrompt(
   worldviewId: string,
   characterId: string,
-  relationshipId: string
+  relationshipId: string,
+  tone: IntroTone = 'balanced'
 ): string {
   const worldview = getWorldviewDescription(worldviewId);
   const character = findOption(characterOptions, characterId);
@@ -99,8 +101,22 @@ export function generatePrompt(
     return '错误：请确保所有选项都已正确选择';
   }
 
+  // 生成开场白
+  const intro = composeIntro({
+    worldId: worldviewId,
+    archetypeId: characterId,
+    relationId: relationshipId,
+    tone,
+  });
+
   // 母模板
-  return `# 角色卡
+  return `# 开场白
+
+${intro}
+
+---
+
+# 角色卡
 
 ## 1. 世界观设定
 **${worldview.label}**
