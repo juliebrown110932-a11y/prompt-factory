@@ -6,13 +6,16 @@ import { CHARACTER_MOTHERS } from '@/app/data/uiPrompts';
 import { ECHO_TEXTS } from '@/app/data/echoTexts';
 import { computeCompat } from '@/app/logic/compat';
 import type { IntroTone } from '@/app/utils/introComposer';
+import { rewriteEchoLine, type EmotionParams } from '@/app/utils/emotionRewriter';
 
 type SelectionPreviewProps = {
   introTone: IntroTone;
   setIntroTone: (tone: IntroTone) => void;
+  risk: EmotionParams['risk'];
+  setRisk: (risk: EmotionParams['risk']) => void;
 };
 
-export function SelectionPreview({ introTone, setIntroTone }: SelectionPreviewProps) {
+export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: SelectionPreviewProps) {
   const {
     characterMotherId,
     archetypeId,
@@ -22,26 +25,36 @@ export function SelectionPreview({ introTone, setIntroTone }: SelectionPreviewPr
 
   const [showPatches, setShowPatches] = useState(false);
 
-  // 获取人设Echo
+  // 构建情绪参数
+  const emotionParams: EmotionParams = { tone: introTone, risk };
+
+  // 获取人设Echo（应用情绪改写）
   const characterEcho = (() => {
     if (!archetypeId) return null;
     // 优先使用精确archetype echo，否则使用母类echo
-    const exactEcho = ECHO_TEXTS.archetype[archetypeId as keyof typeof ECHO_TEXTS.archetype];
-    if (exactEcho) return exactEcho;
+    const baseEcho =
+      ECHO_TEXTS.archetype[archetypeId as keyof typeof ECHO_TEXTS.archetype] ||
+      CHARACTER_MOTHERS.find((m) => m.id === characterMotherId)?.echo ||
+      null;
 
-    const mother = CHARACTER_MOTHERS.find((m) => m.id === characterMotherId);
-    return mother?.echo || null;
+    return baseEcho ? rewriteEchoLine(baseEcho, emotionParams) : null;
   })();
 
-  // 获取关系Echo
-  const relationEcho = relationThemeId
-    ? ECHO_TEXTS.relation[relationThemeId as keyof typeof ECHO_TEXTS.relation] || null
-    : null;
+  // 获取关系Echo（应用情绪改写）
+  const relationEcho = (() => {
+    if (!relationThemeId) return null;
+    const baseEcho =
+      ECHO_TEXTS.relation[relationThemeId as keyof typeof ECHO_TEXTS.relation] || null;
+    return baseEcho ? rewriteEchoLine(baseEcho, emotionParams) : null;
+  })();
 
-  // 获取世界Echo
-  const worldEcho = worldBranchId
-    ? ECHO_TEXTS.world[worldBranchId as keyof typeof ECHO_TEXTS.world] || null
-    : null;
+  // 获取世界Echo（应用情绪改写）
+  const worldEcho = (() => {
+    if (!worldBranchId) return null;
+    const baseEcho =
+      ECHO_TEXTS.world[worldBranchId as keyof typeof ECHO_TEXTS.world] || null;
+    return baseEcho ? rewriteEchoLine(baseEcho, emotionParams) : null;
+  })();
 
   // 计算兼容度（如果三项都选择了）
   const compatResult =
@@ -178,43 +191,63 @@ export function SelectionPreview({ introTone, setIntroTone }: SelectionPreviewPr
         </div>
       )}
 
-      {/* 语气选择器 */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3">开场白语气</h4>
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            onClick={() => setIntroTone('soft')}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-              introTone === 'soft'
-                ? 'bg-purple-500 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-purple-100'
-            }`}
-          >
-            柔和
-          </button>
-          <button
-            onClick={() => setIntroTone('balanced')}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-              introTone === 'balanced'
-                ? 'bg-purple-500 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-purple-100'
-            }`}
-          >
-            中性
-          </button>
-          <button
-            onClick={() => setIntroTone('intense')}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-              introTone === 'intense'
-                ? 'bg-purple-500 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-purple-100'
-            }`}
-          >
-            强烈
-          </button>
+      {/* Emotion Dial 滑杆 */}
+      <div className="mt-6 p-4 sm:p-5 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-xl space-y-5">
+        <h4 className="text-sm font-bold text-gray-800 mb-4">情绪调节 Emotion Dial</h4>
+
+        {/* 语气滑杆 */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-gray-700">语气</label>
+            <span className="text-xs font-semibold text-purple-600">
+              {introTone === 'soft' ? '柔和' : introTone === 'balanced' ? '中性' : '强烈'}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={2}
+            step={1}
+            value={['soft', 'balanced', 'intense'].indexOf(introTone)}
+            onChange={(e) => {
+              const tones: IntroTone[] = ['soft', 'balanced', 'intense'];
+              setIntroTone(tones[+e.target.value]);
+            }}
+            className="w-full h-2 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 rounded-lg appearance-none cursor-pointer slider-thumb"
+          />
+          <div className="flex justify-between text-xs text-gray-500">
+            <span>柔和</span>
+            <span>中性</span>
+            <span>强烈</span>
+          </div>
         </div>
-        <p className="mt-2 text-xs text-gray-500 text-center">
-          切换语气即时生效，影响生成的开场白风格
+
+        {/* 危险度滑杆 */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-gray-700">危险度</label>
+            <span className="text-xs font-semibold text-purple-600">
+              {risk === 0 ? '安全' : risk === 1 ? '暧昧' : '暗黑'}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={2}
+            step={1}
+            value={risk}
+            onChange={(e) => setRisk(+e.target.value as EmotionParams['risk'])}
+            className="w-full h-2 bg-gradient-to-r from-green-200 via-amber-200 to-red-300 rounded-lg appearance-none cursor-pointer slider-thumb"
+          />
+          <div className="flex justify-between text-xs text-gray-500">
+            <span>安全</span>
+            <span>暧昧</span>
+            <span>暗黑</span>
+          </div>
+        </div>
+
+        <p className="mt-3 text-xs text-gray-500 text-center leading-relaxed">
+          移动滑杆实时改写 Echo 与开场白，让故事氛围呼吸
         </p>
       </div>
     </div>

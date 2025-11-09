@@ -4,6 +4,7 @@ import {
 } from '@/app/data/options';
 import { RELATIONS } from '@/app/data/relations';
 import { composeIntro, type IntroTone } from '@/app/utils/introComposer';
+import { getToneLabel, getRiskLabel, type EmotionParams } from '@/app/utils/emotionRewriter';
 
 /**
  * 根据 ID 查找选项
@@ -91,7 +92,8 @@ export function generatePrompt(
   worldviewId: string,
   characterId: string,
   relationshipId: string,
-  tone: IntroTone = 'balanced'
+  tone: IntroTone = 'balanced',
+  risk: EmotionParams['risk'] = 1
 ): string {
   const worldview = getWorldviewDescription(worldviewId);
   const character = findOption(characterOptions, characterId);
@@ -107,6 +109,7 @@ export function generatePrompt(
     archetypeId: characterId,
     relationId: relationshipId,
     tone,
+    risk,
   });
 
   // 母模板
@@ -144,6 +147,12 @@ ${relationship.description}
 * 你的回复必须符合上述世界观和人设，推动我们的关系动态发展。
 * 你的描述应充满张力，避免平淡。
 * 严禁使用任何形式的"抱歉"、"我只是一个AI"等破坏沉浸感的模板化回复。
+
+---
+
+## 情绪设定
+- **语气**: ${getToneLabel(tone)}
+- **危险度**: ${getRiskLabel(risk)}
 
 ---
 

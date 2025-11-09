@@ -10,11 +10,13 @@ import { SelectionPreview } from '@/app/components/SelectionPreview';
 import PromptResult from '@/app/components/PromptResult';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 import type { IntroTone } from '@/app/utils/introComposer';
+import type { EmotionParams } from '@/app/utils/emotionRewriter';
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
   const [introTone, setIntroTone] = useState<IntroTone>('balanced');
+  const [risk, setRisk] = useState<EmotionParams['risk']>(1);
 
   const {
     characterMotherId,
@@ -63,7 +65,7 @@ export default function Home() {
   const handleGenerate = () => {
     if (!worldBranchId || !archetypeId || !relationArcId) return;
 
-    const prompt = generatePrompt(worldBranchId, archetypeId, relationArcId, introTone);
+    const prompt = generatePrompt(worldBranchId, archetypeId, relationArcId, introTone, risk);
     setGeneratedPrompt(prompt);
 
     // 平滑滚动到结果区域
@@ -110,7 +112,14 @@ export default function Home() {
         onNext={handleNext}
         onGenerate={handleGenerate}
         canProceed={canProceed}
-        preview={<SelectionPreview introTone={introTone} setIntroTone={setIntroTone} />}
+        preview={
+          <SelectionPreview
+            introTone={introTone}
+            setIntroTone={setIntroTone}
+            risk={risk}
+            setRisk={setRisk}
+          />
+        }
       >
         {renderStepContent()}
       </WizardLayout>
