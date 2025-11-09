@@ -5,8 +5,14 @@ import { useSelectionStore } from '@/app/store/selection';
 import { CHARACTER_MOTHERS } from '@/app/data/uiPrompts';
 import { ECHO_TEXTS } from '@/app/data/echoTexts';
 import { computeCompat } from '@/app/logic/compat';
+import type { IntroTone } from '@/app/utils/introComposer';
 
-export function SelectionPreview() {
+type SelectionPreviewProps = {
+  introTone: IntroTone;
+  setIntroTone: (tone: IntroTone) => void;
+};
+
+export function SelectionPreview({ introTone, setIntroTone }: SelectionPreviewProps) {
   const {
     characterMotherId,
     archetypeId,
@@ -171,6 +177,46 @@ export function SelectionPreview() {
           </p>
         </div>
       )}
+
+      {/* 语气选择器 */}
+      <div className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
+        <h4 className="text-sm font-semibold text-gray-700 mb-3">开场白语气</h4>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            onClick={() => setIntroTone('soft')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+              introTone === 'soft'
+                ? 'bg-purple-500 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-purple-100'
+            }`}
+          >
+            柔和
+          </button>
+          <button
+            onClick={() => setIntroTone('balanced')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+              introTone === 'balanced'
+                ? 'bg-purple-500 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-purple-100'
+            }`}
+          >
+            中性
+          </button>
+          <button
+            onClick={() => setIntroTone('intense')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+              introTone === 'intense'
+                ? 'bg-purple-500 text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-purple-100'
+            }`}
+          >
+            强烈
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-gray-500 text-center">
+          切换语气即时生效，影响生成的开场白风格
+        </p>
+      </div>
     </div>
   );
 }
