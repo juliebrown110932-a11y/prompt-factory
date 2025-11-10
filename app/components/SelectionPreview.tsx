@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSelectionStore } from '@/app/store/selection';
 import { CHARACTER_MOTHERS } from '@/app/data/uiPrompts';
-import { ECHO_TEXTS } from '@/app/data/echoTexts';
+import { ECHO_TEXTS, ARCT_ECHO } from '@/app/data/echoTexts';
 import { computeCompat } from '@/app/logic/compat';
 import type { IntroTone } from '@/app/utils/introComposer';
 import { rewriteEchoLine, type EmotionParams } from '@/app/utils/emotionRewriter';
@@ -28,10 +28,17 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
   // 构建情绪参数
   const emotionParams: EmotionParams = { tone: introTone, risk };
 
-  // 获取人设Echo（应用情绪改写）
+  // 获取人设Echo（优先使用三档句库）
   const characterEcho = (() => {
     if (!archetypeId) return null;
-    // 优先使用精确archetype echo，否则使用母类echo
+
+    // 优先使用 ARCT_ECHO 三档句库
+    const archetypeEcho = ARCT_ECHO[archetypeId];
+    if (archetypeEcho && archetypeEcho[introTone]) {
+      return archetypeEcho[introTone];
+    }
+
+    // 回退到原有逻辑（使用动态改写）
     const baseEcho =
       ECHO_TEXTS.archetype[archetypeId as keyof typeof ECHO_TEXTS.archetype] ||
       CHARACTER_MOTHERS.find((m) => m.id === characterMotherId)?.echo ||
