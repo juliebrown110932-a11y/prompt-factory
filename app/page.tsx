@@ -100,7 +100,7 @@ export default function Home() {
             AI伴侣调教工坊
           </h1>
           <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-gray-600">
-            通过三步向导，一键生成高质量AI角色扮演提示词
+            三步创造属于你的他。
           </p>
         </div>
       </div>

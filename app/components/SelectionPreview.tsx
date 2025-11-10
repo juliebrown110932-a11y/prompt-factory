@@ -126,7 +126,7 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
         {!characterEcho && !relationEcho && !worldEcho && (
           <div className="p-6 bg-gray-50 rounded-lg text-center">
             <p className="text-gray-400 text-sm">
-              完成选择后，这里将浮现你的故事开场引言
+              完成点选，开启你们的故事。
             </p>
           </div>
         )}
@@ -193,7 +193,7 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
 
       {/* Emotion Dial 滑杆 */}
       <div className="mt-6 p-4 sm:p-5 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-xl space-y-5">
-        <h4 className="text-sm font-bold text-gray-800 mb-4">情绪调节 Emotion Dial</h4>
+        <h4 className="text-sm font-bold text-gray-800 mb-4">氛围调节</h4>
 
         {/* 语气滑杆 */}
         <div className="space-y-2">
@@ -247,7 +247,7 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
         </div>
 
         <p className="mt-3 text-xs text-gray-500 text-center leading-relaxed">
-          移动滑杆实时改写 Echo 与开场白，让故事氛围呼吸
+          滑动以调整语气与氛围浓度。
         </p>
       </div>
     </div>

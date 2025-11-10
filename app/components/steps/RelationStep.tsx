@@ -10,6 +10,15 @@ export function RelationStep() {
 
   const selectedTheme = RELATIONS.find((r) => r.id === relationThemeId);
 
+  // 选择主题时自动选中第一个 arc
+  const handleThemeSelect = (themeId: string) => {
+    const theme = RELATIONS.find((r) => r.id === themeId);
+    setRelationTheme(themeId);
+    if (theme && theme.arcs.length > 0) {
+      setRelationArc(theme.arcs[0].id);
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* 第一层: 选择关系主题 */}
@@ -22,7 +31,7 @@ export function RelationStep() {
             {RELATIONS.map((theme) => (
               <button
                 key={theme.id}
-                onClick={() => setRelationTheme(theme.id)}
+                onClick={() => handleThemeSelect(theme.id)}
                 className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all"
               >
                 <div className="text-center">
@@ -40,7 +49,7 @@ export function RelationStep() {
       )}
 
       {/* 第二层: 选择关系曲线 */}
-      {relationThemeId && !relationArcId && (
+      {relationThemeId && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold text-gray-800">
@@ -68,7 +77,11 @@ export function RelationStep() {
               <button
                 key={arc.id}
                 onClick={() => setRelationArc(arc.id)}
-                className="w-full p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-left"
+                className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                  relationArcId === arc.id
+                    ? 'border-purple-500 bg-purple-50'
+                    : 'border-gray-200 hover:border-purple-400 hover:bg-purple-50'
+                }`}
               >
                 <p className="font-semibold text-gray-800 mb-2">{arc.label}</p>
                 <div className="space-y-1 text-sm text-gray-600">
@@ -84,29 +97,6 @@ export function RelationStep() {
                 </div>
               </button>
             ))}
-          </div>
-        </div>
-      )}
-
-      {/* 已选择状态 */}
-      {relationThemeId && relationArcId && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-800">已选择</h3>
-            <button
-              onClick={() => setRelationArc('')}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              ← 返回重选
-            </button>
-          </div>
-          <div className="p-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
-            <div className="space-y-2">
-              <p className="text-sm text-gray-600">{selectedTheme?.label}</p>
-              <p className="text-lg font-bold text-gray-800">
-                {selectedTheme?.arcs.find((a) => a.id === relationArcId)?.label}
-              </p>
-            </div>
           </div>
         </div>
       )}
