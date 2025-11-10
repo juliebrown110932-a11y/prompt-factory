@@ -56,9 +56,6 @@ export function WizardLayout({
         {/* 顶部进度条 */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-medium text-gray-600">
-              步骤 {currentStep} / {totalSteps}
-            </h2>
             <span className="text-sm font-semibold text-purple-700">
               {getStepLabel(currentStep)}
             </span>

@@ -53,8 +53,7 @@ export default function PromptResult({ prompt }: PromptResultProps) {
       {/* 使用提示 */}
       <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
         <p className="text-xs sm:text-sm text-blue-800">
-          <span className="font-semibold">💡 使用提示：</span>
-          点击&ldquo;复制指令&rdquo;按钮，然后粘贴到你的 AI 对话框中（如 Claude、ChatGPT 等），开始你的专属角色扮演之旅！
+          💡 使用提示：复制上方指令并粘贴到你的聊天窗口，开启角色演绎。
         </p>
       </div>
     </div>
