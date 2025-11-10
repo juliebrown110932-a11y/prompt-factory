@@ -7,6 +7,24 @@ import { composeIntro, type IntroTone } from '@/app/utils/introComposer';
 import { getToneLabel, getRiskLabel, type EmotionParams } from '@/app/utils/emotionRewriter';
 
 /**
+ * 语气预设：详细的氛围指导
+ */
+const tonePresets: Record<IntroTone, string> = {
+  soft: '用温和、含蓄的语言表达情感，避免夸张描写与过度接触。',
+  balanced: '保持克制与张力并存，适度描写靠近与情绪波动。',
+  intense: '允许情绪外溢，语言具压迫感与占有欲，靠近动作更直接。',
+};
+
+/**
+ * 危险度预设：详细的氛围指导
+ */
+const dangerPresets: Record<EmotionParams['risk'], string> = {
+  0: '氛围安全明亮，互动中保持尊重与明确边界。',
+  1: '氛围暧昧，允许含蓄暗示与轻微冒犯的试探。',
+  2: '氛围偏暗黑，允许支配/冲突的潜台词，但避免突破明确的道德与法律底线。',
+};
+
+/**
  * 根据 ID 查找选项
  */
 function findOption(options: Option[], id: string): Option | undefined {
@@ -150,9 +168,13 @@ ${relationship.description}
 
 ---
 
-## 情绪设定
-- **语气**: ${getToneLabel(tone)}
-- **危险度**: ${getRiskLabel(risk)}
+## 氛围指导
+
+### 语气：${getToneLabel(tone)}
+${tonePresets[tone]}
+
+### 危险度：${getRiskLabel(risk)}
+${dangerPresets[risk]}
 
 ---
 
