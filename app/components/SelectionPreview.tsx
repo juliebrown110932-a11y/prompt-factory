@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useSelectionStore } from '@/app/store/selection';
 import { CHARACTER_MOTHERS } from '@/app/data/uiPrompts';
-import { ECHO_TEXTS, ARCT_ECHO } from '@/app/data/echoTexts';
+import { ECHO_TEXTS, ARCT_ECHO, REL_ECHO, WORLD_ECHO } from '@/app/data/echoTexts';
 import { computeCompat } from '@/app/logic/compat';
 import type { IntroTone } from '@/app/utils/introComposer';
 import { rewriteEchoLine, type EmotionParams } from '@/app/utils/emotionRewriter';
+import { dedup3 } from '@/app/utils/textGuards';
 
 type SelectionPreviewProps = {
   introTone: IntroTone;
@@ -25,12 +26,9 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
 
   const [showPatches, setShowPatches] = useState(false);
 
-  // 构建情绪参数
-  const emotionParams: EmotionParams = { tone: introTone, risk };
-
-  // 获取人设Echo（优先使用三档句库）
-  const characterEcho = (() => {
-    if (!archetypeId) return null;
+  // 获取原始 Echo 句子（未去重/消毒）
+  const rawCharacterEcho = (() => {
+    if (!archetypeId) return '';
 
     // 优先使用 ARCT_ECHO 三档句库
     const archetypeEcho = ARCT_ECHO[archetypeId];
@@ -39,29 +37,23 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
     }
 
     // 回退到原有逻辑（使用动态改写）
+    const emotionParams: EmotionParams = { tone: introTone, risk };
     const baseEcho =
       ECHO_TEXTS.archetype[archetypeId as keyof typeof ECHO_TEXTS.archetype] ||
       CHARACTER_MOTHERS.find((m) => m.id === characterMotherId)?.echo ||
-      null;
+      '';
 
-    return baseEcho ? rewriteEchoLine(baseEcho, emotionParams) : null;
+    return baseEcho ? rewriteEchoLine(baseEcho, emotionParams) : '';
   })();
 
-  // 获取关系Echo（应用情绪改写）
-  const relationEcho = (() => {
-    if (!relationThemeId) return null;
-    const baseEcho =
-      ECHO_TEXTS.relation[relationThemeId as keyof typeof ECHO_TEXTS.relation] || null;
-    return baseEcho ? rewriteEchoLine(baseEcho, emotionParams) : null;
-  })();
+  const rawRelationEcho = relationThemeId ? (REL_ECHO[relationThemeId] || '') : '';
+  const rawWorldEcho = worldBranchId ? (WORLD_ECHO[worldBranchId] || '') : '';
 
-  // 获取世界Echo（应用情绪改写）
-  const worldEcho = (() => {
-    if (!worldBranchId) return null;
-    const baseEcho =
-      ECHO_TEXTS.world[worldBranchId as keyof typeof ECHO_TEXTS.world] || null;
-    return baseEcho ? rewriteEchoLine(baseEcho, emotionParams) : null;
-  })();
+  // 应用去重与消毒
+  const [characterEcho, relationEcho, worldEcho] = dedup3(
+    [rawCharacterEcho, rawRelationEcho, rawWorldEcho],
+    ['archetype', 'relation', 'world']
+  );
 
   // 计算兼容度（如果三项都选择了）
   const compatResult =
@@ -97,7 +89,7 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
       {/* Echo三行 */}
       <div className="space-y-4">
         {/* 人设Echo */}
-        {characterEcho && (
+        {archetypeId && characterEcho && (
           <div
             className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg animate-fade-in"
             style={{ animationDelay: '0ms' }}
@@ -108,7 +100,7 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
         )}
 
         {/* 关系Echo */}
-        {relationEcho && (
+        {relationThemeId && relationEcho && (
           <div
             className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg animate-fade-in"
             style={{ animationDelay: '150ms' }}
@@ -119,7 +111,7 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
         )}
 
         {/* 世界Echo */}
-        {worldEcho && (
+        {worldBranchId && worldEcho && (
           <div
             className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg animate-fade-in"
             style={{ animationDelay: '300ms' }}
@@ -130,7 +122,7 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
         )}
 
         {/* 空态提示 */}
-        {!characterEcho && !relationEcho && !worldEcho && (
+        {!archetypeId && !relationThemeId && !worldBranchId && (
           <div className="p-6 bg-gray-50 rounded-lg text-center">
             <p className="text-gray-400 text-sm">
               完成点选，开启你们的故事。

@@ -1,5 +1,6 @@
-import { ECHO_TEXTS } from '@/app/data/echoTexts';
-import { rewriteEchoLine, type EmotionParams } from '@/app/utils/emotionRewriter';
+import { ARCT_ECHO, REL_ECHO, WORLD_ECHO } from '@/app/data/echoTexts';
+import { dedup3 } from '@/app/utils/textGuards';
+import type { EmotionParams } from '@/app/utils/emotionRewriter';
 
 export type IntroTone = 'soft' | 'balanced' | 'intense';
 
@@ -11,29 +12,23 @@ export type IntroInput = {
   risk?: EmotionParams['risk']; // 可选危险度参数
 };
 
+/**
+ * 生成开场白
+ * 使用三档句库 + 去重消毒
+ */
 export function composeIntro(input: IntroInput): string {
-  const { worldId, archetypeId, relationId, tone, risk = 1 } = input;
+  const { worldId, archetypeId, relationId, tone } = input;
 
-  // 构建情绪参数
-  const emotionParams: EmotionParams = { tone, risk };
+  // 获取原始句子
+  const rawArchetypeEcho = ARCT_ECHO[archetypeId]?.[tone] || '';
+  const rawRelationEcho = REL_ECHO[relationId] || '';
+  const rawWorldEcho = WORLD_ECHO[worldId] || '';
 
-  // 从 ECHO 模板取句，缺失时使用默认文本
-  let worldLine =
-    ECHO_TEXTS.world[worldId as keyof typeof ECHO_TEXTS.world] ??
-    '世界安静地转动，像等待一场不该开始的梦。';
-
-  let charLine =
-    ECHO_TEXTS.archetype[archetypeId as keyof typeof ECHO_TEXTS.archetype] ??
-    '他看似平静，实际上暗流涌动。';
-
-  let relLine =
-    ECHO_TEXTS.relation[relationId as keyof typeof ECHO_TEXTS.relation] ??
-    '你们之间隔着无法命名的东西。';
-
-  // 应用情绪改写
-  worldLine = rewriteEchoLine(worldLine, emotionParams);
-  charLine = rewriteEchoLine(charLine, emotionParams);
-  relLine = rewriteEchoLine(relLine, emotionParams);
+  // 应用去重与消毒
+  const [archetypeLine, relationLine, worldLine] = dedup3(
+    [rawArchetypeEcho, rawRelationEcho, rawWorldEcho],
+    ['archetype', 'relation', 'world']
+  );
 
   // 根据语气选择不同的结尾
   const endings: Record<IntroTone, string> = {
@@ -42,18 +37,11 @@ export function composeIntro(input: IntroInput): string {
     intense: '他抬起眼，你已经退无可退。',
   };
 
-  let ending = rewriteEchoLine(endings[tone], emotionParams);
+  const ending = endings[tone];
 
-  // 拼接行
-  const lines = [worldLine, charLine, relLine];
+  // 拼接行：人设 -> 关系 -> 世界 -> 结尾
+  const lines = [archetypeLine, relationLine, worldLine, ending];
 
-  // 危险度为 2 时，在结尾前插入氛围句
-  if (risk === 2) {
-    lines.push('空气里有某种压迫的甜味。');
-  }
-
-  lines.push(ending);
-
-  // 拼接成完整开场白（3-5行）
+  // 拼接成完整开场白（4行）
   return lines.join('\n');
 }
