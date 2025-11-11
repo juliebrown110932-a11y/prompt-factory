@@ -112,7 +112,8 @@ export function generatePrompt(
   characterId: string,
   relationshipId: string,
   tone: IntroTone = 'balanced',
-  risk: EmotionParams['risk'] = 1
+  risk: EmotionParams['risk'] = 1,
+  variant: number = 0
 ): string {
   const worldview = getWorldviewDescription(worldviewId);
   const character = findOption(characterOptions, characterId);
@@ -122,13 +123,14 @@ export function generatePrompt(
     return '错误：请确保所有选项都已正确选择';
   }
 
-  // 生成开场白
+  // 生成开场白（支持变体）
   const intro = composeIntro({
     worldId: worldviewId,
     archetypeId: characterId,
     relationId: relationshipId,
     tone,
     risk,
+    variant,
   });
 
   // 分块内容
