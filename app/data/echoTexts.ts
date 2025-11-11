@@ -299,3 +299,39 @@ export const ARCT_ECHO: Record<string, Record<EchoIntensity, string>> = {
     intense: '他把你按在墙上，说你是我的了。',
   },
 };
+
+/**
+ * REL_ECHO: 关系主题简洁句库
+ * 用于预览区"你们之间"，干净、稳定、无禁词
+ */
+export const REL_ECHO: Record<string, string> = {
+  'enemies_to_lovers': '锋芒彼此抵住不退。',
+  'pretend_to_real': '假意久了，总有真心露出边。',
+  'forced_bond': '命运把你们绑在一起。',
+  'forbidden': '越过那条线，谁都回不去。',
+  'power_imbalance': '亲密与权力在暗处交换位置。',
+  'second_chance': '这一次，他们学会如何相爱。',
+  'cat_mouse': '你追我躲，你躲我追。',
+  'care_grooming': '他把细碎日常铺成围栏。',
+  'contract_marriage': '纸面之下，心跳露了形。',
+  'redemption': '你分不清这是救赎还是共坠。',
+  'amnesia': '记忆不在，牵引还在。',
+};
+
+/**
+ * WORLD_ECHO: 世界分支简洁句库
+ * 用于预览区"故事舞台"，干净、稳定、无禁词
+ */
+export const WORLD_ECHO: Record<string, string> = {
+  'modern.light': '白昼下的城市，也藏着秘密。',
+  'modern.dark': '霓虹处，交易与欲望并生。',
+  'modern.mafia': '血与忠诚的世界，只给你温柔。',
+  'campus.normal': '课铃之后，秘密才开始流动。',
+  'campus.elite': '名门学园里，目光从不单纯。',
+  'court.intrigue': '宫墙回声里，话要小声一点。',
+  'court.magic': '誓言比魔法更危险。',
+  'future.cyber': '霓虹之下，数据比真相快一步。',
+  'future.abo': '气味法则写进身体，也写进命运。',
+  'apoc.survival': '风里有灰，灰里有血。',
+  'apoc.virus': '口罩之下，承诺更贵。',
+};
