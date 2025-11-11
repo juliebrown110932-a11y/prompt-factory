@@ -5,6 +5,7 @@ import {
 import { RELATIONS } from '@/app/data/relations';
 import { composeIntro, type IntroTone } from '@/app/utils/introComposer';
 import { getToneLabel, getRiskLabel, type EmotionParams } from '@/app/utils/emotionRewriter';
+import { usePromptBlocks, type BlockKey } from '@/app/store/promptBlocks';
 
 /**
  * 语气预设：详细的氛围指导
@@ -104,7 +105,7 @@ function getRelationDescription(arcId: string): { label: string; description: st
 }
 
 /**
- * 生成完整的AI角色扮演提示词
+ * 生成完整的AI角色扮演提示词（分块版本）
  */
 export function generatePrompt(
   worldviewId: string,
@@ -130,7 +131,71 @@ export function generatePrompt(
     risk,
   });
 
-  // 母模板
+  // 分块内容
+  const blocks = {
+    intro: intro,
+    world: `**${worldview.label}**\n\n${worldview.description}`,
+    archetype: `**${character.label}**\n\n${character.description}`,
+    relation: `**${relationship.label}**\n\n${relationship.description}`,
+    rules: `* 你（AI）必须始终沉浸在你的角色设定中。
+* 你的回复必须符合上述世界观和人设，推动我们的关系动态发展。
+* 你的描述应充满张力，避免平淡。
+* 严禁使用任何形式的"抱歉"、"我只是一个AI"等破坏沉浸感的模板化回复。`,
+    emotion: `### 语气：${getToneLabel(tone)}
+${tonePresets[tone]}
+
+### 危险度：${getRiskLabel(risk)}
+${dangerPresets[risk]}`,
+  };
+
+  // 写入 promptBlocks store
+  usePromptBlocks.getState().setOriginalAndCurrent(blocks);
+
+  // 返回完整字符串（保持向后兼容）
+  return `# 开场白
+
+${blocks.intro}
+
+---
+
+# 角色卡
+
+## 1. 世界观设定
+${blocks.world}
+
+---
+
+## 2. 你的角色（AI人设）
+${blocks.archetype}
+
+---
+
+## 3. 我们的关系（核心动态）
+${blocks.relation}
+
+---
+
+## 4. 核心规则
+${blocks.rules}
+
+---
+
+## 氛围指导
+${blocks.emotion}
+
+---
+
+现在，以这个角色开始我们的故事。`;
+}
+
+/**
+ * 从 promptBlocks store 导出完整 Prompt
+ * 优先使用用户编辑后的 current 版本
+ */
+export function exportPromptFromBlocks(): string {
+  const { current } = usePromptBlocks.getState();
+  const { intro, world, archetype, relation, rules, emotion } = current;
+
   return `# 开场白
 
 ${intro}
@@ -140,41 +205,27 @@ ${intro}
 # 角色卡
 
 ## 1. 世界观设定
-**${worldview.label}**
-
-${worldview.description}
+${world}
 
 ---
 
 ## 2. 你的角色（AI人设）
-**${character.label}**
-
-${character.description}
+${archetype}
 
 ---
 
 ## 3. 我们的关系（核心动态）
-**${relationship.label}**
-
-${relationship.description}
+${relation}
 
 ---
 
 ## 4. 核心规则
-* 你（AI）必须始终沉浸在你的角色设定中。
-* 你的回复必须符合上述世界观和人设，推动我们的关系动态发展。
-* 你的描述应充满张力，避免平淡。
-* 严禁使用任何形式的"抱歉"、"我只是一个AI"等破坏沉浸感的模板化回复。
+${rules}
 
 ---
 
 ## 氛围指导
-
-### 语气：${getToneLabel(tone)}
-${tonePresets[tone]}
-
-### 危险度：${getRiskLabel(risk)}
-${dangerPresets[risk]}
+${emotion}
 
 ---
 
