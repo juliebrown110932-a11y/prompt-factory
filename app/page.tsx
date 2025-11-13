@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSelectionStore } from '@/app/store/selection';
+import { usePromptBlocks } from '@/app/store/promptBlocks';
 import { WizardLayout } from '@/app/components/WizardLayout';
 import { CharacterStep } from '@/app/components/steps/CharacterStep';
 import { RelationStep } from '@/app/components/steps/RelationStep';
@@ -17,6 +18,7 @@ export default function Home() {
   const [generatedPrompt, setGeneratedPrompt] = useState<string>('');
   const [introTone, setIntroTone] = useState<IntroTone>('balanced');
   const [risk, setRisk] = useState<EmotionParams['risk']>(1);
+  const [variant, setVariant] = useState<number>(0);
 
   const {
     characterMotherId,
@@ -26,6 +28,7 @@ export default function Home() {
     relationArcId,
     worldMotherId,
     worldBranchId,
+    reset: resetSelection,
   } = useSelectionStore();
 
   // 检查每一步是否完成
@@ -65,7 +68,14 @@ export default function Home() {
   const handleGenerate = () => {
     if (!worldBranchId || !archetypeId || !relationArcId) return;
 
-    const prompt = generatePrompt(worldBranchId, archetypeId, relationArcId, introTone, risk);
+    const prompt = generatePrompt(
+      worldBranchId,
+      archetypeId,
+      relationArcId,
+      introTone,
+      risk,
+      variant
+    );
     setGeneratedPrompt(prompt);
 
     // 平滑滚动到结果区域
@@ -75,6 +85,48 @@ export default function Home() {
         resultElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
+  };
+
+  // 再生成一个（保留当前选择，换变体）
+  const handleRegenerate = () => {
+    if (!worldBranchId || !archetypeId || !relationArcId) return;
+
+    // 递增 variant，触发重新生成
+    const newVariant = variant + 1;
+    setVariant(newVariant);
+
+    const prompt = generatePrompt(
+      worldBranchId,
+      archetypeId,
+      relationArcId,
+      introTone,
+      risk,
+      newVariant
+    );
+    setGeneratedPrompt(prompt);
+  };
+
+  // 重新开始（清空所有选择）
+  const handleReset = () => {
+    // 清空选择 store
+    resetSelection();
+
+    // 清空 promptBlocks store
+    usePromptBlocks.getState().resetAll();
+
+    // 清空生成的 Prompt
+    setGeneratedPrompt('');
+
+    // 重置氛围参数
+    setIntroTone('balanced');
+    setRisk(1);
+    setVariant(0);
+
+    // 回到第一步
+    setCurrentStep(1);
+
+    // 滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // 渲染当前步骤的内容
@@ -128,7 +180,11 @@ export default function Home() {
       {generatedPrompt && (
         <div id="prompt-result" className="scroll-mt-4 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 py-8">
           <div className="max-w-7xl mx-auto px-4">
-            <PromptResult prompt={generatedPrompt} />
+            <PromptResult
+              prompt={generatedPrompt}
+              onRegenerate={handleRegenerate}
+              onReset={handleReset}
+            />
           </div>
         </div>
       )}
