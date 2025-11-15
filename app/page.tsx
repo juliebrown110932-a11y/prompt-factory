@@ -66,11 +66,12 @@ export default function Home() {
 
   // 生成提示词
   const handleGenerate = () => {
-    if (!worldBranchId || !archetypeId || !relationArcId) return;
+    if (!worldBranchId || !archetypeId || !relationThemeId || !relationArcId) return;
 
     const prompt = generatePrompt(
       worldBranchId,
       archetypeId,
+      relationThemeId,
       relationArcId,
       introTone,
       risk,
@@ -89,7 +90,7 @@ export default function Home() {
 
   // 再生成一个（保留当前选择，换变体）
   const handleRegenerate = () => {
-    if (!worldBranchId || !archetypeId || !relationArcId) return;
+    if (!worldBranchId || !archetypeId || !relationThemeId || !relationArcId) return;
 
     // 递增 variant，触发重新生成
     const newVariant = variant + 1;
@@ -98,6 +99,7 @@ export default function Home() {
     const prompt = generatePrompt(
       worldBranchId,
       archetypeId,
+      relationThemeId,
       relationArcId,
       introTone,
       risk,

@@ -110,14 +110,15 @@ function getRelationDescription(arcId: string): { label: string; description: st
 export function generatePrompt(
   worldviewId: string,
   characterId: string,
-  relationshipId: string,
+  relationshipThemeId: string,
+  relationshipArcId: string,
   tone: IntroTone = 'balanced',
   risk: EmotionParams['risk'] = 1,
   variant: number = 0
 ): string {
   const worldview = getWorldviewDescription(worldviewId);
   const character = findOption(characterOptions, characterId);
-  const relationship = getRelationDescription(relationshipId);
+  const relationship = getRelationDescription(relationshipArcId);
 
   if (!worldview || !character || !relationship) {
     return '错误：请确保所有选项都已正确选择';
@@ -127,7 +128,7 @@ export function generatePrompt(
   const intro = composeIntro({
     worldId: worldviewId,
     archetypeId: characterId,
-    relationId: relationshipId,
+    relationId: relationshipThemeId,
     tone,
     risk,
     variant,
