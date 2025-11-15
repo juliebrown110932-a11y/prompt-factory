@@ -133,6 +133,12 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
           subtitle="对话的核心约束"
         />
 
+        <EditableBlock
+          title="关系发展阶段控制"
+          blockKey="stageEngine"
+          subtitle="三段式阶段锁，控制关系推进节奏"
+        />
+
         {modelPatch && (
           <EditableBlock
             title="模型专属优化指令"
