@@ -12,6 +12,7 @@ import PromptResult from '@/app/components/PromptResult';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 import type { IntroTone } from '@/app/utils/introComposer';
 import type { EmotionParams } from '@/app/utils/emotionRewriter';
+import type { ModelId } from '@/app/data/modelPatches';
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
@@ -19,6 +20,7 @@ export default function Home() {
   const [introTone, setIntroTone] = useState<IntroTone>('balanced');
   const [risk, setRisk] = useState<EmotionParams['risk']>(1);
   const [variant, setVariant] = useState<number>(0);
+  const [modelId, setModelId] = useState<ModelId | undefined>(undefined);
 
   const {
     characterMotherId,
@@ -75,7 +77,8 @@ export default function Home() {
       relationArcId,
       introTone,
       risk,
-      variant
+      variant,
+      modelId
     );
     setGeneratedPrompt(prompt);
 
@@ -103,7 +106,8 @@ export default function Home() {
       relationArcId,
       introTone,
       risk,
-      newVariant
+      newVariant,
+      modelId
     );
     setGeneratedPrompt(prompt);
   };
@@ -123,6 +127,7 @@ export default function Home() {
     setIntroTone('balanced');
     setRisk(1);
     setVariant(0);
+    setModelId(undefined);
 
     // 回到第一步
     setCurrentStep(1);
@@ -172,6 +177,8 @@ export default function Home() {
             setIntroTone={setIntroTone}
             risk={risk}
             setRisk={setRisk}
+            modelId={modelId}
+            setModelId={setModelId}
           />
         }
       >
