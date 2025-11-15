@@ -6,6 +6,8 @@ import { RELATIONS } from '@/app/data/relations';
 import { composeIntro, type IntroTone } from '@/app/utils/introComposer';
 import { getToneLabel, getRiskLabel, type EmotionParams } from '@/app/utils/emotionRewriter';
 import { usePromptBlocks, type BlockKey } from '@/app/store/promptBlocks';
+import { MODEL_PATCHES, type ModelId } from '@/app/data/modelPatches';
+import { BEHAVIOR_ENGINE } from '@/app/data/behaviorEngine';
 
 /**
  * 语气预设：详细的氛围指导
@@ -114,7 +116,8 @@ export function generatePrompt(
   relationshipArcId: string,
   tone: IntroTone = 'balanced',
   risk: EmotionParams['risk'] = 1,
-  variant: number = 0
+  variant: number = 0,
+  modelId?: ModelId
 ): string {
   const worldview = getWorldviewDescription(worldviewId);
   const character = findOption(characterOptions, characterId);
@@ -134,15 +137,19 @@ export function generatePrompt(
     variant,
   });
 
+  // 获取模型专属patch（如果指定了modelId）
+  const modelPatch = modelId ? MODEL_PATCHES[modelId] : '';
+
   // 分块内容
   const blocks = {
     intro: intro,
     world: `**${worldview.label}**\n\n${worldview.description}`,
     archetype: `**${character.label}**\n\n${character.description}`,
     relation: `**${relationship.label}**\n\n${relationship.description}`,
-    rules: `* 你（AI）必须始终沉浸在你的角色设定中。
+    rules: `${BEHAVIOR_ENGINE}
+
+* 你（AI）必须始终沉浸在你的角色设定中。
 * 你的回复必须符合上述世界观和人设，推动我们的关系动态发展。
-* 你的描述应充满张力，避免平淡。
 * 严禁使用任何形式的"抱歉"、"我只是一个AI"等破坏沉浸感的模板化回复。`,
     emotion: `### 语气：${getToneLabel(tone)}
 ${tonePresets[tone]}
@@ -181,7 +188,7 @@ ${blocks.relation}
 ## 4. 核心规则
 ${blocks.rules}
 
----
+${modelPatch ? `---\n\n${modelPatch}\n` : ''}---
 
 ## 氛围指导
 ${blocks.emotion}

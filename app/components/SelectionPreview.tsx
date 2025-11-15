@@ -8,15 +8,18 @@ import { computeCompat } from '@/app/logic/compat';
 import type { IntroTone } from '@/app/utils/introComposer';
 import { rewriteEchoLine, type EmotionParams } from '@/app/utils/emotionRewriter';
 import { dedup3 } from '@/app/utils/textGuards';
+import { MODEL_LABELS, type ModelId } from '@/app/data/modelPatches';
 
 type SelectionPreviewProps = {
   introTone: IntroTone;
   setIntroTone: (tone: IntroTone) => void;
   risk: EmotionParams['risk'];
   setRisk: (risk: EmotionParams['risk']) => void;
+  modelId?: ModelId;
+  setModelId: (modelId: ModelId | undefined) => void;
 };
 
-export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: SelectionPreviewProps) {
+export function SelectionPreview({ introTone, setIntroTone, risk, setRisk, modelId, setModelId }: SelectionPreviewProps) {
   const {
     characterMotherId,
     archetypeId,
@@ -245,8 +248,32 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk }: Sel
           </div>
         </div>
 
+        {/* 模型选择下拉框 */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-gray-700">目标模型</label>
+            <span className="text-xs font-semibold text-purple-600">
+              {modelId ? MODEL_LABELS[modelId] : '通用'}
+            </span>
+          </div>
+          <select
+            value={modelId || ''}
+            onChange={(e) => setModelId(e.target.value ? e.target.value as ModelId : undefined)}
+            className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent cursor-pointer transition-all"
+          >
+            <option value="">通用（不添加模型专属指令）</option>
+            <option value="claude">Claude</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="gemini">Gemini</option>
+            <option value="deepseek">DeepSeek</option>
+          </select>
+          <p className="text-xs text-gray-500">
+            选择后将添加针对该模型的专属优化指令
+          </p>
+        </div>
+
         <p className="mt-3 text-xs text-gray-500 text-center leading-relaxed">
-          滑动以调整语气与氛围浓度。
+          滑动以调整语气与氛围浓度，选择目标模型以优化Prompt。
         </p>
       </div>
     </div>
