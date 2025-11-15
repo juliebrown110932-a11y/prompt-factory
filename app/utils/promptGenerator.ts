@@ -8,6 +8,7 @@ import { getToneLabel, getRiskLabel, type EmotionParams } from '@/app/utils/emot
 import { usePromptBlocks, type BlockKey } from '@/app/store/promptBlocks';
 import { MODEL_PATCHES, type ModelId } from '@/app/data/modelPatches';
 import { BEHAVIOR_ENGINE } from '@/app/data/behaviorEngine';
+import { GENERIC_STAGE_ENGINE, type StageTemplate } from '@/app/data/stageEngine';
 
 /**
  * 语气预设：详细的氛围指导
@@ -107,6 +108,32 @@ function getRelationDescription(arcId: string): { label: string; description: st
 }
 
 /**
+ * 生成阶段引擎文本
+ */
+function generateStageEngineText(stages: StageTemplate): string {
+  return `## 关系发展阶段控制
+
+**当前阶段: ${stages.stage1.name}**
+
+### 阶段1: ${stages.stage1.name}
+- 允许: ${stages.stage1.allowedActions.join('、')}
+- 禁止: ${stages.stage1.forbiddenActions.join('、')}
+- 进入下阶段条件: ${stages.stage1.transitionTrigger}
+
+### 阶段2: ${stages.stage2.name}
+- 允许: ${stages.stage2.allowedActions.join('、')}
+- 禁止: ${stages.stage2.forbiddenActions.join('、')}
+- 进入下阶段条件: ${stages.stage2.transitionTrigger}
+
+### 阶段3: ${stages.stage3.name}
+- 允许: ${stages.stage3.allowedActions.join('、')}
+- 禁止: ${stages.stage3.forbiddenActions.join('、')}
+- 维持方式: ${stages.stage3.transitionTrigger}
+
+**重要**: 严格遵守当前阶段限制，不可跨阶段行为。只有满足转阶条件后才能进入下一阶段。`;
+}
+
+/**
  * 生成完整的AI角色扮演提示词（分块版本）
  */
 export function generatePrompt(
@@ -137,6 +164,9 @@ export function generatePrompt(
     variant,
   });
 
+  // 生成阶段引擎
+  const stageEngine = generateStageEngineText(GENERIC_STAGE_ENGINE);
+
   // 获取模型专属patch（如果指定了modelId）
   const modelPatch = modelId ? MODEL_PATCHES[modelId] : '';
 
@@ -151,6 +181,7 @@ export function generatePrompt(
 * 你（AI）必须始终沉浸在你的角色设定中。
 * 你的回复必须符合上述世界观和人设，推动我们的关系动态发展。
 * 严禁使用任何形式的"抱歉"、"我只是一个AI"等破坏沉浸感的模板化回复。`,
+    stageEngine: stageEngine,
     modelPatch: modelPatch,
     emotion: `### 语气：${getToneLabel(tone)}
 ${tonePresets[tone]}
@@ -189,7 +220,13 @@ ${blocks.relation}
 ## 4. 核心规则
 ${blocks.rules}
 
-${blocks.modelPatch ? `---\n\n${blocks.modelPatch}\n` : ''}---
+---
+
+${blocks.stageEngine}
+
+${blocks.modelPatch ? `\n---\n\n${blocks.modelPatch}` : ''}
+
+---
 
 ## 氛围指导
 ${blocks.emotion}
@@ -205,7 +242,7 @@ ${blocks.emotion}
  */
 export function exportPromptFromBlocks(): string {
   const { current } = usePromptBlocks.getState();
-  const { intro, world, archetype, relation, rules, modelPatch, emotion } = current;
+  const { intro, world, archetype, relation, rules, stageEngine, modelPatch, emotion } = current;
 
   return `# 开场白
 
@@ -233,7 +270,13 @@ ${relation}
 ## 4. 核心规则
 ${rules}
 
-${modelPatch ? `---\n\n${modelPatch}\n` : ''}---
+---
+
+${stageEngine}
+
+${modelPatch ? `\n---\n\n${modelPatch}` : ''}
+
+---
 
 ## 氛围指导
 ${emotion}
