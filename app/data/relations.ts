@@ -20,7 +20,12 @@ export type RelationTheme = {
     | 'care_grooming'
     | 'contract_marriage'
     | 'redemption'
-    | 'amnesia';
+    | 'amnesia'
+    | 'childhood_friends'
+    | 'daily_companionship'
+    | 'bickering_lovers'
+    | 'ambiguous_testing'
+    | 'care_mutual';
   label: string;         // 主题名（UI 一级）
   description?: string;  // 一句话解释（预览用）
   arcs: RelationArc[];   // UI 二级
@@ -185,6 +190,77 @@ export const RELATIONS: RelationTheme[] = [
         start: '失去过去：情感被清空，一切回到原点',
         turn:  '重新相识：旧的熟悉感不请自来',
         end:   '记忆重构：爱在失忆中重生'
+      }
+    ],
+  },
+  // 新增：日常甜向关系动态（5个）
+  {
+    id: 'childhood_friends',
+    label: '青梅竹马',
+    description: '从小一起长大，习惯了彼此的存在。',
+    arcs: [
+      {
+        id: 'cf.standard',
+        label: '从朋友到恋人',
+        start: '从小一起长大，习惯了彼此的存在',
+        turn:  '某个瞬间意识到——这不只是朋友的感觉',
+        end:   '捅破窗户纸，从\'我们\'变成\'我们俩\''
+      }
+    ],
+  },
+  {
+    id: 'daily_companionship',
+    label: '日常陪伴',
+    description: '在琐碎中相爱，平凡却不可替代。',
+    arcs: [
+      {
+        id: 'dc.standard',
+        label: '在琐碎中相爱',
+        start: '平淡相处，没有惊心动魄的开始',
+        turn:  '在琐碎日常中发现依赖——他不在时，总觉得少了什么',
+        end:   '成为彼此的习惯，平凡却不可替代'
+      }
+    ],
+  },
+  {
+    id: 'bickering_lovers',
+    label: '欢喜冤家',
+    description: '见面就斗嘴，却谁也离不开谁。',
+    arcs: [
+      {
+        id: 'bl.standard',
+        label: '吵着吵着就喜欢上了',
+        start: '见面就斗嘴，谁也不服谁',
+        turn:  '发现吵架也是一种在意——不在乎的人，连吵都懒得吵',
+        end:   '在打闹中确认心意，\'我最烦你了\'变成\'我只烦你一个人\''
+      }
+    ],
+  },
+  {
+    id: 'ambiguous_testing',
+    label: '暧昧试探',
+    description: '若即若离的距离，试探性的靠近。',
+    arcs: [
+      {
+        id: 'at.standard',
+        label: '从暧昧到明朗',
+        start: '若即若离的距离，试探性的靠近',
+        turn:  '某个瞬间心动，但谁也不敢先说破',
+        end:   '终于有人先开口，暧昧变成明朗'
+      }
+    ],
+  },
+  {
+    id: 'care_mutual',
+    label: '照顾与被照顾',
+    description: '一方需要帮助，另一方伸出手。',
+    arcs: [
+      {
+        id: 'cm2.standard',
+        label: '从依赖到相互支撑',
+        start: '一方需要帮助，另一方伸出手',
+        turn:  '发现这种依赖很甜——被需要和被照顾，都是幸福',
+        end:   '从单向付出到互相支撑，成为彼此的依靠'
       }
     ],
   },

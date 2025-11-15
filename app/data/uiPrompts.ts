@@ -1,6 +1,6 @@
 // 人设三层：母类 -> 子archetype -> 可选tone标记
 export type CharacterMother = {
-  id: 'cold系' | 'gentle系' | 'dark系' | 'guard系' | 'mad系' | 'broken系';
+  id: 'cold系' | 'gentle系' | 'dark系' | 'guard系' | 'mad系' | 'broken系' | 'sweet系';
   label: string;          // Step1-A 选项文案（情绪化）
   archetypes: { id: string; label: string }[]; // 对应现有的人设ID
   echo: string;           // 选中后在右侧回显的一句（≤20字）
@@ -86,6 +86,23 @@ export const CHARACTER_MOTHERS: CharacterMother[] = [
       { id: 'rival-justice', label: '正邪对立' },
       { id: 'non-human-god', label: '高傲神明' },
       { id: 'non-human-experiment', label: '危险实验体' },
+    ],
+  },
+  {
+    id: 'sweet系',
+    label: '治愈甜系',
+    echo: '他的温暖不刺眼，却能融化冰。',
+    archetypes: [
+      { id: 'sunshine-healer', label: '小太阳' },
+      { id: 'silly-lovebrain', label: '笨蛋恋爱脑' },
+      { id: 'tsundere-sharp', label: '毒舌' },
+      { id: 'deadpan-humor', label: '反社交冷幽默' },
+      { id: 'soft-puppy', label: '呆萌小狗' },
+      { id: 'broken-stray', label: '丧犬' },
+      { id: 'growth-loser', label: '成长型废柴' },
+      { id: 'younger-puppy', label: '年下奶狗' },
+      { id: 'fox-lazy', label: '狐系咸鱼' },
+      { id: 'engineer-warm', label: '靠谱理工男' },
     ],
   },
 ];

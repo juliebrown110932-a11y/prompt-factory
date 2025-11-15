@@ -9,6 +9,7 @@ export function WorldStep() {
     useSelectionStore();
 
   const selectedWorld = WORLDS.find((w) => w.id === worldMotherId);
+  const selectedBranch = selectedWorld?.children.find((b) => b.id === worldBranchId);
 
   return (
     <div className="space-y-8">
@@ -25,10 +26,7 @@ export function WorldStep() {
                 onClick={() => setWorldMother(world.id)}
                 className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-left"
               >
-                <p className="font-semibold text-gray-800 mb-2">{world.label}</p>
-                {world.tagline && (
-                  <p className="text-sm text-gray-600 italic">{world.tagline}</p>
-                )}
+                <p className="font-semibold text-gray-800">{world.label}</p>
               </button>
             ))}
           </div>
@@ -50,19 +48,9 @@ export function WorldStep() {
             </button>
           </div>
           <div className="mb-4 p-4 bg-purple-50 rounded-lg">
-            <p className="text-sm text-purple-700 font-medium mb-1">
+            <p className="text-sm text-purple-700 font-medium">
               {selectedWorld?.label}
             </p>
-            {selectedWorld?.tagline && (
-              <p className="text-xs text-purple-600 italic">
-                {selectedWorld.tagline}
-              </p>
-            )}
-            {selectedWorld?.summary && (
-              <p className="text-xs text-gray-600 mt-2 leading-relaxed">
-                {selectedWorld.summary}
-              </p>
-            )}
           </div>
           <div className="grid grid-cols-1 gap-3">
             {selectedWorld?.children.map((branch) => (
@@ -71,17 +59,14 @@ export function WorldStep() {
                 onClick={() => setWorldBranch(branch.id)}
                 className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-left"
               >
-                <p className="font-semibold text-gray-800 mb-1">{branch.label}</p>
-                {branch.branchBrief && (
-                  <p className="text-sm text-gray-600">{branch.branchBrief}</p>
-                )}
+                <p className="font-semibold text-gray-800">{branch.label}</p>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* 已选择状态 */}
+      {/* 已选择状态：显示分支详细描述 */}
       {worldMotherId && worldBranchId && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -94,11 +79,18 @@ export function WorldStep() {
             </button>
           </div>
           <div className="p-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
-            <div className="space-y-2">
-              <p className="text-sm text-gray-600">{selectedWorld?.label}</p>
-              <p className="text-lg font-bold text-gray-800">
-                {selectedWorld?.children.find((b) => b.id === worldBranchId)?.label}
-              </p>
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <p className="text-sm text-gray-600">{selectedWorld?.label}</p>
+                <p className="text-lg font-bold text-gray-800">
+                  {selectedBranch?.label}
+                </p>
+              </div>
+              {selectedBranch?.description && (
+                <p className="text-sm text-gray-700 leading-relaxed mt-3">
+                  {selectedBranch.description}
+                </p>
+              )}
             </div>
           </div>
         </div>
