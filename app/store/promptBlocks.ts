@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type BlockKey = 'intro' | 'world' | 'archetype' | 'relation' | 'rules' | 'emotion';
+export type BlockKey = 'intro' | 'world' | 'archetype' | 'relation' | 'rules' | 'modelPatch' | 'emotion';
 
 type BlockState = {
   original: Record<BlockKey, string>; // 生成时的版本
@@ -17,6 +17,7 @@ const emptyBlocks: Record<BlockKey, string> = {
   archetype: '',
   relation: '',
   rules: '',
+  modelPatch: '',
   emotion: '',
 };
 

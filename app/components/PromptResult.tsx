@@ -4,6 +4,7 @@ import { useState } from 'react';
 import EditableBlock from './EditableBlock';
 import { exportPromptFromBlocks } from '@/app/utils/promptGenerator';
 import { copyText } from '@/app/utils/copy';
+import { usePromptBlocks } from '@/app/store/promptBlocks';
 
 interface PromptResultProps {
   prompt: string; // 保留向后兼容，但实际使用 blocks store
@@ -15,6 +16,9 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
   const [copied, setCopied] = useState(false);
   const [showManualCopy, setShowManualCopy] = useState(false);
   const [manualCopyText, setManualCopyText] = useState('');
+
+  // 从 store 读取 modelPatch 来判断是否显示
+  const modelPatch = usePromptBlocks((state) => state.current.modelPatch);
 
   const handleCopyAll = async () => {
     try {
@@ -128,6 +132,14 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
           blockKey="rules"
           subtitle="对话的核心约束"
         />
+
+        {modelPatch && (
+          <EditableBlock
+            title="模型专属优化指令"
+            blockKey="modelPatch"
+            subtitle="针对目标模型的定向修正"
+          />
+        )}
 
         <EditableBlock
           title="氛围指导"

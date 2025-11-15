@@ -151,6 +151,7 @@ export function generatePrompt(
 * 你（AI）必须始终沉浸在你的角色设定中。
 * 你的回复必须符合上述世界观和人设，推动我们的关系动态发展。
 * 严禁使用任何形式的"抱歉"、"我只是一个AI"等破坏沉浸感的模板化回复。`,
+    modelPatch: modelPatch,
     emotion: `### 语气：${getToneLabel(tone)}
 ${tonePresets[tone]}
 
@@ -188,7 +189,7 @@ ${blocks.relation}
 ## 4. 核心规则
 ${blocks.rules}
 
-${modelPatch ? `---\n\n${modelPatch}\n` : ''}---
+${blocks.modelPatch ? `---\n\n${blocks.modelPatch}\n` : ''}---
 
 ## 氛围指导
 ${blocks.emotion}
@@ -204,7 +205,7 @@ ${blocks.emotion}
  */
 export function exportPromptFromBlocks(): string {
   const { current } = usePromptBlocks.getState();
-  const { intro, world, archetype, relation, rules, emotion } = current;
+  const { intro, world, archetype, relation, rules, modelPatch, emotion } = current;
 
   return `# 开场白
 
@@ -232,7 +233,7 @@ ${relation}
 ## 4. 核心规则
 ${rules}
 
----
+${modelPatch ? `---\n\n${modelPatch}\n` : ''}---
 
 ## 氛围指导
 ${emotion}
