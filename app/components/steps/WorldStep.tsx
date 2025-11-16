@@ -1,100 +1,116 @@
 'use client';
 
+import { useState } from 'react';
 import { useSelectionStore } from '@/app/store/selection';
 import { WORLDS } from '@/app/data/worlds';
 import { UI_QUESTIONS } from '@/app/data/uiPrompts';
+import { WORLD_ECHO } from '@/app/data/echoTexts';
 
 export function WorldStep() {
-  const { worldMotherId, worldBranchId, setWorldMother, setWorldBranch } =
-    useSelectionStore();
+  const { worldBranchId, setWorldMother, setWorldBranch } = useSelectionStore();
+  const [expandedWorldId, setExpandedWorldId] = useState<string | null>(null);
 
-  const selectedWorld = WORLDS.find((w) => w.id === worldMotherId);
-  const selectedBranch = selectedWorld?.children.find((b) => b.id === worldBranchId);
+  const handleWorldClick = (worldId: string) => {
+    if (expandedWorldId === worldId) {
+      setExpandedWorldId(null);
+    } else {
+      setExpandedWorldId(worldId);
+    }
+  };
+
+  const handleBranchSelect = (worldId: string, branchId: string) => {
+    setWorldMother(worldId);
+    setWorldBranch(branchId);
+  };
 
   return (
-    <div className="space-y-8">
-      {/* 第一层: 选择世界母观 */}
-      {!worldMotherId && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-800">
-            {UI_QUESTIONS.world}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {WORLDS.map((world) => (
-              <button
-                key={world.id}
-                onClick={() => setWorldMother(world.id)}
-                className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-left"
-              >
-                <p className="font-semibold text-gray-800">{world.label}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+    <div className="space-y-6">
+      <h3 className="text-xl font-bold text-gray-800">
+        {UI_QUESTIONS.world}
+      </h3>
 
-      {/* 第二层: 选择世界分支 */}
-      {worldMotherId && !worldBranchId && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-800">
-              {UI_QUESTIONS.worldBranch}
-            </h3>
-            <button
-              onClick={() => setWorldMother('')}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              ← 返回重选
-            </button>
-          </div>
-          <div className="mb-4 p-4 bg-purple-50 rounded-lg">
-            <p className="text-sm text-purple-700 font-medium">
-              {selectedWorld?.label}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            {selectedWorld?.children.map((branch) => (
-              <button
-                key={branch.id}
-                onClick={() => setWorldBranch(branch.id)}
-                className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-left"
-              >
-                <p className="font-semibold text-gray-800">{branch.label}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="space-y-4">
+        {WORLDS.map((world) => {
+          const isExpanded = expandedWorldId === world.id;
+          const hasSelection = world.children.some((b) => b.id === worldBranchId);
 
-      {/* 已选择状态：显示分支详细描述 */}
-      {worldMotherId && worldBranchId && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-800">已选择</h3>
-            <button
-              onClick={() => setWorldBranch('')}
-              className="text-sm text-gray-500 hover:text-gray-700"
+          return (
+            <div
+              key={world.id}
+              className={`border-2 rounded-xl transition-all ${
+                isExpanded || hasSelection
+                  ? 'border-purple-400 bg-purple-50'
+                  : 'border-gray-200'
+              }`}
             >
-              ← 返回重选
-            </button>
-          </div>
-          <div className="p-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <p className="text-sm text-gray-600">{selectedWorld?.label}</p>
-                <p className="text-lg font-bold text-gray-800">
-                  {selectedBranch?.label}
-                </p>
-              </div>
-              {selectedBranch?.description && (
-                <p className="text-sm text-gray-700 leading-relaxed mt-3">
-                  {selectedBranch.description}
-                </p>
+              {/* 母世界观标题 */}
+              <button
+                onClick={() => handleWorldClick(world.id)}
+                className="w-full p-4 text-left hover:bg-purple-50 rounded-xl transition-all"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold text-gray-800">{world.label}</p>
+                  <span className="text-gray-500 text-sm">
+                    {isExpanded ? '▼' : '▶'}
+                  </span>
+                </div>
+              </button>
+
+              {/* 展开的分支卡片 */}
+              {isExpanded && (
+                <div className="px-4 pb-4 space-y-3">
+                  {world.children.map((branch) => {
+                    const isSelected = branch.id === worldBranchId;
+                    const echoText = WORLD_ECHO[branch.id] || '';
+
+                    return (
+                      <div
+                        key={branch.id}
+                        className={`p-5 rounded-lg border-2 transition-all ${
+                          isSelected
+                            ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100'
+                            : 'border-gray-300 bg-white hover:border-purple-300'
+                        }`}
+                      >
+                        {/* 分支名称 */}
+                        <h4 className="text-lg font-bold text-gray-800 mb-1">
+                          {branch.label}
+                        </h4>
+
+                        {/* Echo句（副标题） */}
+                        {echoText && (
+                          <p className="text-sm text-purple-600 font-medium mb-3">
+                            {echoText}
+                          </p>
+                        )}
+
+                        {/* 完整描述 */}
+                        {branch.description && (
+                          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                            {branch.description}
+                          </p>
+                        )}
+
+                        {/* 选择按钮 */}
+                        <button
+                          onClick={() => handleBranchSelect(world.id, branch.id)}
+                          className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
+                            isSelected
+                              ? 'bg-purple-600 text-white cursor-default'
+                              : 'bg-purple-500 text-white hover:bg-purple-600'
+                          }`}
+                        >
+                          {isSelected ? '✓ 已选择' : '选择此世界观'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
             </div>
-          </div>
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }
