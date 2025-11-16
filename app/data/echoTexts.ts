@@ -63,25 +63,6 @@ export const ECHO_TEXTS = {
     'redemption': '你不确定这是救赎，还是共坠。',
     'amnesia': '记忆清空，爱却重新长出来。',
   },
-
-  // 世界分支 echo（按 branchId 匹配）
-  world: {
-    'modern.light': '都市的阳光里，也会长出真心。',
-    'modern.dark': '雨夜的霓虹碎裂，他站在阴影边缘。',
-    'modern.mafia': '血与忠诚的世界，只给你温柔。',
-
-    'campus.normal': '操场的风吹过，带着青涩的心动。',
-    'campus.elite': '名门学园的窗后，目光从不单纯。',
-
-    'court.intrigue': '宫廷的誓言是陷阱，唯独你是真的。',
-    'court.magic': '沉睡的帝国里，誓言比魔法更危险。',
-
-    'future.cyber': '记忆可被篡改，唯独心动是真实的。',
-    'future.abo': '冷色星港，信息素法令在空气里巡逻。',
-
-    'apoc.survival': '荒原风刮过弹壳与伤口的味道。',
-    'apoc.virus': '感染之前，先被你感染了。',
-  },
 };
 
 /**
@@ -400,24 +381,19 @@ export const REL_ECHO: Record<string, string> = {
  * 用于预览区"故事舞台"，干净、稳定、无禁词
  */
 export const WORLD_ECHO: Record<string, string> = {
-  // 现代都市
   'modern.light': '便利店灯光下，有人在等你',
   'modern.dark': '这座城市的夜，不讲道理',
-  'modern.mafia': '子弹和血，忠诚或背叛',
+  'modern.mafia': '枪声里，守住的是你',
 
-  // 校园
-  'campus.normal': '暗恋写在课桌角落',
-  'campus.elite': '名门校服下，规则不成文',
+  'campus.normal': '青春在此刻，有人等你放学',
+  'campus.elite': '阶层壁垒下，爱是唯一叛逆',
 
-  // 宫廷
   'court.intrigue': '宫墙回声里，话要小声一点',
   'court.magic': '禁术的代价，是你的灵魂',
 
-  // 未来
   'future.cyber': '霓虹之下，机器也学会心动',
   'future.abo': '信息素支配一切，本能无法抗拒',
 
-  // 末日
   'apoc.survival': '废墟之上，活着比爱更难',
   'apoc.virus': '病毒肆虐，你的体温是唯一温暖'
 };
