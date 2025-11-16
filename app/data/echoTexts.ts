@@ -400,15 +400,24 @@ export const REL_ECHO: Record<string, string> = {
  * 用于预览区"故事舞台"，干净、稳定、无禁词
  */
 export const WORLD_ECHO: Record<string, string> = {
-  'modern.light': '白昼下的城市，也藏着秘密。',
-  'modern.dark': '霓虹处，交易与欲望并生。',
-  'modern.mafia': '血与忠诚的世界，只给你温柔。',
-  'campus.normal': '课铃之后，秘密才开始流动。',
-  'campus.elite': '名门学园里，目光从不单纯。',
-  'court.intrigue': '宫墙回声里，话要小声一点。',
-  'court.magic': '誓言比魔法更危险。',
-  'future.cyber': '霓虹之下，数据比真相快一步。',
-  'future.abo': '气味法则写进身体，也写进命运。',
-  'apoc.survival': '风里有灰，灰里有血。',
-  'apoc.virus': '口罩之下，承诺更贵。',
+  // 现代都市
+  'modern.light': '便利店灯光下，有人在等你',
+  'modern.dark': '这座城市的夜，不讲道理',
+  'modern.mafia': '子弹和血，忠诚或背叛',
+
+  // 校园
+  'campus.normal': '暗恋写在课桌角落',
+  'campus.elite': '名门校服下，规则不成文',
+
+  // 宫廷
+  'court.intrigue': '宫墙回声里，话要小声一点',
+  'court.magic': '禁术的代价，是你的灵魂',
+
+  // 未来
+  'future.cyber': '霓虹之下，机器也学会心动',
+  'future.abo': '信息素支配一切，本能无法抗拒',
+
+  // 末日
+  'apoc.survival': '废墟之上，活着比爱更难',
+  'apoc.virus': '病毒肆虐，你的体温是唯一温暖'
 };
