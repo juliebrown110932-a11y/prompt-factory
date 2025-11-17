@@ -116,7 +116,7 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
         />
 
         <EditableBlock
-          title="你的角色（AI人设）"
+          title={'AI 角色卡（本节"你"指代AI）'}
           blockKey="archetype"
           subtitle="TA 的性格与核心特质"
         />

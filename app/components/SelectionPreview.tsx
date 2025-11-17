@@ -9,6 +9,8 @@ import type { IntroTone } from '@/app/utils/introComposer';
 import { rewriteEchoLine, type EmotionParams } from '@/app/utils/emotionRewriter';
 import { dedup3 } from '@/app/utils/textGuards';
 import { MODEL_LABELS, type ModelId } from '@/app/data/modelPatches';
+import { WORLDS } from '@/app/data/worlds';
+import { RELATIONS } from '@/app/data/relations';
 
 type SelectionPreviewProps = {
   introTone: IntroTone;
@@ -17,17 +19,48 @@ type SelectionPreviewProps = {
   setRisk: (risk: EmotionParams['risk']) => void;
   modelId?: ModelId;
   setModelId: (modelId: ModelId | undefined) => void;
+  setCurrentStep?: (step: 1 | 2 | 3) => void;
 };
 
-export function SelectionPreview({ introTone, setIntroTone, risk, setRisk, modelId, setModelId }: SelectionPreviewProps) {
+export function SelectionPreview({ introTone, setIntroTone, risk, setRisk, modelId, setModelId, setCurrentStep }: SelectionPreviewProps) {
   const {
     characterMotherId,
     archetypeId,
     relationThemeId,
+    relationArcId,
+    worldMotherId,
     worldBranchId,
   } = useSelectionStore();
 
   const [showPatches, setShowPatches] = useState(false);
+
+  // 获取选择的标签名称
+  const getArchetypeLabel = () => {
+    if (!archetypeId) return null;
+    for (const mother of CHARACTER_MOTHERS) {
+      const archetype = mother.archetypes.find(a => a.id === archetypeId);
+      if (archetype) return archetype.label;
+    }
+    return null;
+  };
+
+  const getRelationLabel = () => {
+    if (!relationThemeId || !relationArcId) return null;
+    const theme = RELATIONS.find(r => r.id === relationThemeId);
+    if (!theme) return null;
+    const arc = theme.arcs.find(a => a.id === relationArcId);
+    if (!arc) return null;
+    return `${theme.label} - ${arc.label}`;
+  };
+
+  const getWorldLabel = () => {
+    if (!worldBranchId) return null;
+    for (const world of WORLDS) {
+      const branch = world.children.find(b => b.id === worldBranchId);
+      if (branch) return `${world.label} - ${branch.label}`;
+    }
+    return null;
+  };
 
   // 获取原始 Echo 句子（未去重/消毒）
   const rawCharacterEcho = (() => {
@@ -87,6 +120,62 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk, model
 
   return (
     <div className="space-y-6">
+      {/* 选择路径可视化 */}
+      {(archetypeId || relationArcId || worldBranchId) && setCurrentStep && (
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold text-gray-800">当前选择</h3>
+          <div className="grid grid-cols-1 gap-2">
+            {/* 人设卡片 */}
+            {archetypeId && (
+              <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                <div>
+                  <p className="text-xs text-purple-600 font-medium mb-0.5">人设</p>
+                  <p className="text-sm text-gray-800 font-medium">{getArchetypeLabel()}</p>
+                </div>
+                <button
+                  onClick={() => setCurrentStep(1)}
+                  className="px-3 py-1.5 text-xs rounded-md bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium transition-colors"
+                >
+                  修改
+                </button>
+              </div>
+            )}
+
+            {/* 关系卡片 */}
+            {relationArcId && (
+              <div className="flex items-center justify-between p-3 bg-pink-50 rounded-lg">
+                <div>
+                  <p className="text-xs text-pink-600 font-medium mb-0.5">关系</p>
+                  <p className="text-sm text-gray-800 font-medium">{getRelationLabel()}</p>
+                </div>
+                <button
+                  onClick={() => setCurrentStep(2)}
+                  className="px-3 py-1.5 text-xs rounded-md bg-pink-100 hover:bg-pink-200 text-pink-700 font-medium transition-colors"
+                >
+                  修改
+                </button>
+              </div>
+            )}
+
+            {/* 世界观卡片 */}
+            {worldBranchId && (
+              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                <div>
+                  <p className="text-xs text-blue-600 font-medium mb-0.5">世界观</p>
+                  <p className="text-sm text-gray-800 font-medium">{getWorldLabel()}</p>
+                </div>
+                <button
+                  onClick={() => setCurrentStep(3)}
+                  className="px-3 py-1.5 text-xs rounded-md bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition-colors"
+                >
+                  修改
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <h3 className="text-lg font-bold text-gray-800">故事预览</h3>
 
       {/* Echo三行 */}
