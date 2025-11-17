@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import EditableBlock from './EditableBlock';
+import NameAndOpeningSuggestion from './NameAndOpeningSuggestion';
 import { exportPromptFromBlocks } from '@/app/utils/promptGenerator';
 import { copyText } from '@/app/utils/copy';
 import { usePromptBlocks } from '@/app/store/promptBlocks';
@@ -62,54 +63,26 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
   };
 
   return (
-    <div className="w-full mt-8 sm:mt-10">
+    <div className="w-full mt-8 sm:mt-10 pb-24">
       {/* 结果标题和操作按钮 */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
           ✨ 你的专属调教指令
         </h2>
         <div className="flex flex-wrap gap-2">
-          {onRegenerate && (
-            <button
-              onClick={handleRegenerate}
-              className="px-3 py-2 text-sm rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium transition-colors min-h-[44px]"
-            >
-              🔄 再生成一个
-            </button>
-          )}
           {onReset && (
             <button
               onClick={handleReset}
               className="px-3 py-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-colors min-h-[44px]"
             >
-              ↻ 重新开始
+              🔄 重新开始
             </button>
           )}
-          <button
-            onClick={handleCopyAll}
-            className={`
-              px-4 py-2 rounded-lg font-medium text-sm sm:text-base
-              min-h-[44px] transition-all duration-200
-              ${
-                copied
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white hover:shadow-lg active:scale-95'
-              }
-            `}
-          >
-            {copied ? '✓ 已复制' : '📋 复制全部指令'}
-          </button>
         </div>
       </div>
 
       {/* 分块展示区域 */}
       <div className="space-y-4">
-        <EditableBlock
-          title="开场白"
-          blockKey="intro"
-          subtitle="故事的开篇氛围"
-        />
-
         <EditableBlock
           title="世界观设定"
           blockKey="world"
@@ -171,6 +144,9 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
             subtitle="针对目标模型的定向修正"
           />
         )}
+
+        {/* 取名+开场建议组件 */}
+        <NameAndOpeningSuggestion />
       </div>
 
       {/* 使用提示 */}
@@ -182,10 +158,27 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
           <li>点击「✎ 编辑」可修改任意模块内容</li>
           <li>点击「⧉ 复制此块」可单独复制某个模块</li>
           <li>点击「↺ 重置此块」可恢复至生成版本</li>
-          <li>点击顶部「📋 复制全部指令」可复制完整 Prompt</li>
-          {onRegenerate && <li>点击「🔄 再生成一个」可生成新的变体（保留当前选择）</li>}
-          {onReset && <li>点击「↻ 重新开始」可清空所有选择重新开始</li>}
+          <li>点击页面右下角「📋 复制全部指令」可复制完整 Prompt</li>
+          {onReset && <li>点击「🔄 重新开始」可清空所有选择重新开始</li>}
         </ul>
+      </div>
+
+      {/* 固定位置的复制按钮 */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          onClick={handleCopyAll}
+          className={`
+            px-6 py-3 rounded-lg font-medium text-base
+            shadow-lg transition-all duration-200
+            ${
+              copied
+                ? 'bg-green-500 text-white'
+                : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white hover:shadow-xl active:scale-95'
+            }
+          `}
+        >
+          {copied ? '✓ 已复制' : '📋 复制全部指令'}
+        </button>
       </div>
 
       {/* 手动复制弹窗 */}
