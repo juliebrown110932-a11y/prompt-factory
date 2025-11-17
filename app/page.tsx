@@ -56,6 +56,13 @@ export default function Home() {
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep((prev) => (prev - 1) as 1 | 2 | 3);
+      // 滚动到页面顶部
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }, 100);
     }
   };
 
@@ -63,6 +70,13 @@ export default function Home() {
   const handleNext = () => {
     if (currentStep < 3 && canProceed) {
       setCurrentStep((prev) => (prev + 1) as 1 | 2 | 3);
+      // 滚动到页面顶部
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }, 100);
     }
   };
 
