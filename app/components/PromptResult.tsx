@@ -16,6 +16,7 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
   const [copied, setCopied] = useState(false);
   const [showManualCopy, setShowManualCopy] = useState(false);
   const [manualCopyText, setManualCopyText] = useState('');
+  const [isSystemConfigExpanded, setIsSystemConfigExpanded] = useState(false);
 
   // 从 store 读取 modelPatch 来判断是否显示
   const modelPatch = usePromptBlocks((state) => state.current.modelPatch);
@@ -127,17 +128,41 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
           subtitle="你们之间的情感曲线"
         />
 
-        <EditableBlock
-          title="互动规则"
-          blockKey="rules"
-          subtitle="对话的核心约束"
-        />
+        {/* System Config - 可折叠区域 */}
+        <div className="bg-white rounded-lg border border-gray-200">
+          <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+               onClick={() => setIsSystemConfigExpanded(!isSystemConfigExpanded)}>
+            <div>
+              <h3 className="text-base font-semibold text-gray-800">⚙️ System Config</h3>
+              <p className="text-xs text-gray-500 mt-0.5">系统配置（互动规则、阶段控制、氛围指导）</p>
+            </div>
+            <button className="text-sm text-gray-600 hover:text-gray-800 font-medium px-3 py-1 rounded hover:bg-gray-100 transition-colors">
+              {isSystemConfigExpanded ? '▲ 收起' : '▼ 展开查看/编辑'}
+            </button>
+          </div>
 
-        <EditableBlock
-          title="关系发展阶段控制"
-          blockKey="stageEngine"
-          subtitle="三段式阶段锁，控制关系推进节奏"
-        />
+          {isSystemConfigExpanded && (
+            <div className="p-4 pt-0 space-y-4 border-t border-gray-100">
+              <EditableBlock
+                title="互动规则"
+                blockKey="rules"
+                subtitle="对话的核心约束"
+              />
+
+              <EditableBlock
+                title="关系发展阶段控制"
+                blockKey="stageEngine"
+                subtitle="三段式阶段锁，控制关系推进节奏"
+              />
+
+              <EditableBlock
+                title="氛围指导"
+                blockKey="emotion"
+                subtitle="语气与危险度设定"
+              />
+            </div>
+          )}
+        </div>
 
         {modelPatch && (
           <EditableBlock
@@ -146,12 +171,6 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
             subtitle="针对目标模型的定向修正"
           />
         )}
-
-        <EditableBlock
-          title="氛围指导"
-          blockKey="emotion"
-          subtitle="语气与危险度设定"
-        />
       </div>
 
       {/* 使用提示 */}
