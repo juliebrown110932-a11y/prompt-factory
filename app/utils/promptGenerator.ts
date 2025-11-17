@@ -204,7 +204,7 @@ ${blocks.emotion}
 
 ---
 
-${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}以上是完整设定。现在，用户会说第一句话，请以角色身份自然回应。`;
+${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}现在，请以角色身份自然回应。`;
 }
 
 /**
@@ -213,7 +213,19 @@ ${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}以上是完整设�
  */
 export function exportPromptFromBlocks(): string {
   const { current } = usePromptBlocks.getState();
-  const { intro, world, archetype, relation, rules, stageEngine, modelPatch, emotion } = current;
+  const { intro, world, archetype, relation, rules, stageEngine, modelPatch, emotion, characterName, openingLine } = current;
+
+  // 构建名字和开场句部分
+  let nameAndOpeningSection = '';
+  if (characterName || openingLine) {
+    nameAndOpeningSection = '\n---\n\n';
+    if (characterName) {
+      nameAndOpeningSection += `**角色名字**: ${characterName}\n\n`;
+    }
+    if (openingLine) {
+      nameAndOpeningSection += `**第一次互动**: ${openingLine}\n\n`;
+    }
+  }
 
   return `# 角色卡
 
@@ -242,5 +254,5 @@ ${emotion}
 
 ---
 
-${modelPatch ? `${modelPatch}\n\n---\n\n` : ''}以上是完整设定。现在，用户会说第一句话，请以角色身份自然回应。`;
+${modelPatch ? `${modelPatch}\n\n---\n\n` : ''}${nameAndOpeningSection}现在，请以角色身份自然回应。`;
 }

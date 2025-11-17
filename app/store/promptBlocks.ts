@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type BlockKey = 'intro' | 'world' | 'archetype' | 'relation' | 'rules' | 'stageEngine' | 'modelPatch' | 'emotion';
+export type BlockKey = 'intro' | 'world' | 'archetype' | 'relation' | 'rules' | 'stageEngine' | 'modelPatch' | 'emotion' | 'characterName' | 'openingLine';
 
 type BlockState = {
   original: Record<BlockKey, string>; // 生成时的版本
@@ -20,6 +20,8 @@ const emptyBlocks: Record<BlockKey, string> = {
   stageEngine: '',
   modelPatch: '',
   emotion: '',
+  characterName: '',
+  openingLine: '',
 };
 
 export const usePromptBlocks = create<BlockState>((set, get) => ({
