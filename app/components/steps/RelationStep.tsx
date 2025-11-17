@@ -37,7 +37,7 @@ export function RelationStep() {
                 <div className="text-center">
                   <p className="font-semibold text-gray-800 mb-1">{theme.label}</p>
                   {theme.description && (
-                    <p className="text-xs text-gray-500 line-clamp-2">
+                    <p className="text-xs text-gray-500 whitespace-normal leading-relaxed">
                       {theme.description}
                     </p>
                   )}

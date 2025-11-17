@@ -29,27 +29,24 @@ export function WorldStep() {
         {UI_QUESTIONS.world}
       </h3>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {WORLDS.map((world) => {
           const isExpanded = expandedWorldId === world.id;
           const hasSelection = world.children.some((b) => b.id === worldBranchId);
 
           return (
-            <div
-              key={world.id}
-              className={`border-2 rounded-xl transition-all ${
-                isExpanded || hasSelection
-                  ? 'border-purple-400 bg-purple-50'
-                  : 'border-gray-200'
-              }`}
-            >
+            <div key={world.id} className="transition-all">
               {/* 母世界观标题 */}
               <button
                 onClick={() => handleWorldClick(world.id)}
-                className="w-full p-4 text-left hover:bg-purple-50 rounded-xl transition-all"
+                className={`w-full p-4 text-left rounded-lg transition-all ${
+                  isExpanded || hasSelection
+                    ? 'bg-purple-50 hover:bg-purple-100'
+                    : 'bg-white hover:bg-gray-50'
+                }`}
               >
                 <div className="flex items-center justify-between">
-                  <p className="font-semibold text-gray-800">{world.label}</p>
+                  <p className="text-lg font-semibold text-gray-800">{world.label}</p>
                   <span className="text-gray-500 text-sm">
                     {isExpanded ? '▼' : '▶'}
                   </span>
@@ -58,7 +55,7 @@ export function WorldStep() {
 
               {/* 展开的分支卡片 */}
               {isExpanded && (
-                <div className="px-4 pb-4 space-y-3">
+                <div className="pl-6 mt-3 space-y-3">
                   {world.children.map((branch) => {
                     const isSelected = branch.id === worldBranchId;
                     const echoText = WORLD_ECHO[branch.id] || '';
@@ -66,20 +63,20 @@ export function WorldStep() {
                     return (
                       <div
                         key={branch.id}
-                        className={`p-5 rounded-lg border-2 transition-all ${
+                        className={`p-5 rounded-lg transition-all ${
                           isSelected
-                            ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100'
-                            : 'border-gray-300 bg-white hover:border-purple-300'
+                            ? 'bg-gradient-to-br from-purple-100 to-pink-100 border-2 border-purple-400'
+                            : 'bg-purple-50 hover:bg-purple-100'
                         }`}
                       >
                         {/* 分支名称 */}
-                        <h4 className="text-lg font-bold text-gray-800 mb-1">
+                        <h4 className="font-medium text-purple-900 mb-1">
                           {branch.label}
                         </h4>
 
                         {/* Echo句（副标题） */}
                         {echoText && (
-                          <p className="text-sm text-purple-600 font-medium mb-3">
+                          <p className="text-sm text-purple-700 font-medium mb-2">
                             {echoText}
                           </p>
                         )}
