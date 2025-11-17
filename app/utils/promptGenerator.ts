@@ -177,13 +177,7 @@ ${getMoodDescription(tone, risk)}
   usePromptBlocks.getState().setOriginalAndCurrent(blocks);
 
   // 返回完整字符串（保持向后兼容）
-  return `# 开场白
-
-${blocks.intro}
-
----
-
-# 角色卡
+  return `# 角色卡
 
 ## 1. 世界观设定
 ${blocks.world}
@@ -210,7 +204,7 @@ ${blocks.emotion}
 
 ---
 
-${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}现在，以这个角色开始我们的故事。`;
+${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}以上是完整设定。现在，用户会说第一句话，请以角色身份自然回应。`;
 }
 
 /**
@@ -221,13 +215,7 @@ export function exportPromptFromBlocks(): string {
   const { current } = usePromptBlocks.getState();
   const { intro, world, archetype, relation, rules, stageEngine, modelPatch, emotion } = current;
 
-  return `# 开场白
-
-${intro}
-
----
-
-# 角色卡
+  return `# 角色卡
 
 ## 1. 世界观设定
 ${world}
@@ -254,5 +242,5 @@ ${emotion}
 
 ---
 
-${modelPatch ? `${modelPatch}\n\n---\n\n` : ''}现在，以这个角色开始我们的故事。`;
+${modelPatch ? `${modelPatch}\n\n---\n\n` : ''}以上是完整设定。现在，用户会说第一句话，请以角色身份自然回应。`;
 }
