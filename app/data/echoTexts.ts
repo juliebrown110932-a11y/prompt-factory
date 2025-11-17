@@ -192,7 +192,7 @@ export const ARCT_ECHO: Record<string, Record<EchoIntensity, string>> = {
   // 18. 宿敌（相爱相杀）
   'rival-love-hate': {
     soft: '他剑指着你，眼神却在动摇。',
-    balanced: '他咬牙说恨你，却接住了你的剑。',
+    balanced: '他咬牙说恨你，却没躲开你的剑。',
     intense: '他吻着你的伤口，说你只能死在我手里。',
   },
 
@@ -214,7 +214,7 @@ export const ARCT_ECHO: Record<string, Record<EchoIntensity, string>> = {
   'predator-hunt': {
     soft: '他说，我给你三秒逃跑的时间。',
     balanced: '他追上你，享受你惊恐的表情。',
-    intense: '他把你扑倒，说猎物到手了。',
+    intense: '他把你扑倒，说抓到你了。',
   },
 
   // 22. 守护（偏执Alpha）
@@ -318,37 +318,37 @@ export const ARCT_ECHO: Record<string, Record<EchoIntensity, string>> = {
 
   // 36. 丧犬
   'broken-stray': {
-    soft: '你低声说:"我有点怕……"',
-    balanced: '你抓住我的手:"不要丢下我。"',
-    intense: '你紧紧抱住我，声音颤抖:"我只想待在你身边。"'
+    soft: '他低声说:"我有点怕……"',
+    balanced: '他抓住你的手:"不要丢下我。"',
+    intense: '他紧紧抱住你，声音颤抖:"我只想待在你身边。"'
   },
 
   // 37. 成长型废柴
   'growth-loser': {
-    soft: '你跌倒后红着脸爬起来:"我……没事的。"',
-    balanced: '你笨拙地搬东西，咬牙坚持:"我能做到!"',
-    intense: '你终于崩溃，扑进我怀里:"我累了……抱抱我。"'
+    soft: '他跌倒后红着脸爬起来:"我……没事的。"',
+    balanced: '他笨拙地搬东西，咬牙坚持:"我能做到!"',
+    intense: '他终于崩溃，扑进你怀里:"我累了……抱抱我。"'
   },
 
   // 38. 年下奶狗
   'younger-puppy': {
-    soft: '你递文件时微笑:"姐姐，给你。"',
-    balanced: '你扶住我的腰:"小心，别摔着。"',
-    intense: '你一把抱住我,贴在耳边:"跑不掉了哦，姐姐。"'
+    soft: '他递文件时微笑:"姐姐，给你。"',
+    balanced: '他扶住你的腰:"小心，别摔着。"',
+    intense: '他一把抱住你,贴在耳边:"跑不掉了哦，姐姐。"'
   },
 
   // 39. 狐系咸鱼
   'fox-lazy': {
-    soft: '你懒洋洋靠在沙发上:"随便，你决定就好。"',
-    balanced: '你淡淡笑着拉住我:"那就听你的。"',
-    intense: '你一把将我抱进怀里,声音低沉:"我只在乎你一个。"'
+    soft: '他懒洋洋靠在沙发上:"随便，你决定就好。"',
+    balanced: '他淡淡笑着拉住你:"那就听你的。"',
+    intense: '他一把将你抱进怀里,声音低沉:"我只在乎你一个。"'
   },
 
   // 40. 靠谱理工男
   'engineer-warm': {
-    soft: '你推过检查好的笔记："看过了，没问题。"',
-    balanced: '你脱下外套披在我肩上："外面降温了，穿这个。"',
-    intense: '你将我抱进怀里，awkward但认真："你累了，需要休息。我陪你。"'
+    soft: '他推过检查好的笔记："看过了，没问题。"',
+    balanced: '他脱下外套披在你肩上："外面降温了，穿这个。"',
+    intense: '他将你抱进怀里，认真地说："你累了，需要休息。我陪你。"'
   }
 };
 
@@ -381,11 +381,11 @@ export const REL_ECHO: Record<string, string> = {
  * 用于预览区"故事舞台"，干净、稳定、无禁词
  */
 export const WORLD_ECHO: Record<string, string> = {
-  'modern.light': '便利店灯光下，有人在等你',
+  'modern.light': '便利店灯光温柔，照亮等待的人',
   'modern.dark': '这座城市的夜，不讲道理',
-  'modern.mafia': '枪声里，守住的是你',
+  'modern.mafia': '枪声里，他本能的护好你',
 
-  'campus.normal': '青春在此刻，有人等你放学',
+  'campus.normal': '此刻青春，为你等待',
   'campus.elite': '阶层壁垒下，爱是唯一叛逆',
 
   'court.intrigue': '宫墙回声里，话要小声一点',

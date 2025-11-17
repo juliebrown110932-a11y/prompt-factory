@@ -193,6 +193,7 @@ export default function Home() {
             setRisk={setRisk}
             modelId={modelId}
             setModelId={setModelId}
+            setCurrentStep={setCurrentStep}
           />
         }
       >
