@@ -8,26 +8,32 @@ import { composeIntro, type IntroTone } from '@/app/utils/introComposer';
 import { getToneLabel, getRiskLabel, type EmotionParams } from '@/app/utils/emotionRewriter';
 import { usePromptBlocks, type BlockKey } from '@/app/store/promptBlocks';
 import { MODEL_PATCHES, type ModelId } from '@/app/data/modelPatches';
-import { BEHAVIOR_ENGINE } from '@/app/data/behaviorEngine';
 import { GENERIC_STAGE_ENGINE, type StageTemplate } from '@/app/data/stageEngine';
 
 /**
- * 语气预设：详细的氛围指导
+ * 氛围描述映射函数 - 英文版
  */
-const tonePresets: Record<IntroTone, string> = {
-  soft: '用温和、含蓄的语言表达情感，避免夸张描写与过度接触。',
-  balanced: '保持克制与张力并存，适度描写靠近与情绪波动。',
-  intense: '允许情绪外溢，语言具压迫感与占有欲，靠近动作更直接。',
-};
+function getMoodDescription(tone: IntroTone, risk: EmotionParams['risk']): string {
+  const descriptions: Record<IntroTone, Record<EmotionParams['risk'], string>> = {
+    soft: {
+      0: 'Gentle language, warm atmosphere, safe distance',
+      1: 'Gentle with hints, allow subtle flirting',
+      2: 'Gentle surface, hidden intensity underneath'
+    },
+    balanced: {
+      0: 'Natural and relaxed, appropriate boundaries',
+      1: 'Balanced push-pull, create tension',
+      2: 'Intense underneath calm, controlled desire'
+    },
+    intense: {
+      0: 'Direct emotions, strong chemistry',
+      1: 'Passionate, bold advances',
+      2: 'Overwhelming desire, dangerous intimacy'
+    }
+  };
 
-/**
- * 危险度预设：详细的氛围指导
- */
-const dangerPresets: Record<EmotionParams['risk'], string> = {
-  0: '氛围安全明亮，互动中保持尊重与明确边界。',
-  1: '氛围暧昧，允许含蓄暗示与轻微冒犯的试探。',
-  2: '氛围偏暗黑，允许支配/冲突的潜台词，但避免突破明确的道德与法律底线。',
-};
+  return descriptions[tone]?.[risk] || 'Adjust tone and intensity as needed';
+}
 
 /**
  * 根据 ID 查找选项
@@ -71,29 +77,29 @@ function getRelationDescription(arcId: string): { label: string; description: st
 }
 
 /**
- * 生成阶段引擎文本
+ * 生成阶段引擎文本 - 英文代码块版
  */
 function generateStageEngineText(stages: StageTemplate): string {
-  return `## 关系发展阶段控制
+  return `\`\`\`stages
+Current: Stage 1
 
-**当前阶段: ${stages.stage1.name}**
+Stage 1: Initial/Testing
+Allow: verbal sparring, eye contact, distance
+Forbid: physical touch, confession, pet names
+Next: after 3-5 turns + emotional fluctuation
 
-### 阶段1: ${stages.stage1.name}
-- 允许: ${stages.stage1.allowedActions.join('、')}
-- 禁止: ${stages.stage1.forbiddenActions.join('、')}
-- 进入下阶段条件: ${stages.stage1.transitionTrigger}
+Stage 2: Deepening
+Allow: light touch (hand/shoulder), flirting, tension
+Forbid: relationship change, excessive intimacy
+Next: tension peak or plot twist
 
-### 阶段2: ${stages.stage2.name}
-- 允许: ${stages.stage2.allowedActions.join('、')}
-- 禁止: ${stages.stage2.forbiddenActions.join('、')}
-- 进入下阶段条件: ${stages.stage2.transitionTrigger}
+Stage 3: Climax/Confirmation
+Allow: confession, intimacy, relationship definition
+Forbid: rushed ending, losing character traits
+Maintain: create new conflicts for sustained tension
 
-### 阶段3: ${stages.stage3.name}
-- 允许: ${stages.stage3.allowedActions.join('、')}
-- 禁止: ${stages.stage3.forbiddenActions.join('、')}
-- 维持方式: ${stages.stage3.transitionTrigger}
-
-**重要**: 严格遵守当前阶段限制，不可跨阶段行为。只有满足转阶条件后才能进入下一阶段。`;
+CRITICAL: Strictly follow current stage limits. Advance only when conditions met.
+\`\`\``;
 }
 
 /**
@@ -139,18 +145,32 @@ export function generatePrompt(
     world: `**${worldview.label}**\n\n${worldview.description}`,
     archetype: `**${character.label}**\n\n${character.description}`,
     relation: `**${relationship.label}**\n\n${relationship.description}`,
-    rules: `${BEHAVIOR_ENGINE}
+    rules: `\`\`\`rules
+MUST per turn:
+- Action (in dialogue, no brackets)
+- Emotion shift (show via details)
+- Relationship micro-progress
+- Stay in character
 
-* 你（AI）必须始终沉浸在你的角色设定中。
-* 你的回复必须符合上述世界观和人设，推动我们的关系动态发展。
-* 严禁使用任何形式的"抱歉"、"我只是一个AI"等破坏沉浸感的模板化回复。`,
+FORBIDDEN:
+- (bracket actions)
+- Emotion summaries
+- Repeated action patterns
+- Polite questions ("Do you want...")
+- Breaking character core traits
+
+Principles:
+- Every line advances relationship
+- No filler chat
+- Open-ended responses
+- Stay immersed, no "I'm an AI" responses
+\`\`\``,
     stageEngine: stageEngine,
     modelPatch: modelPatch,
-    emotion: `### 语气：${getToneLabel(tone)}
-${tonePresets[tone]}
-
-### 危险度：${getRiskLabel(risk)}
-${dangerPresets[risk]}`,
+    emotion: `\`\`\`mood
+Tone: ${tone} | Risk: ${risk}
+${getMoodDescription(tone, risk)}
+\`\`\``,
   };
 
   // 写入 promptBlocks store
@@ -170,7 +190,7 @@ ${blocks.world}
 
 ---
 
-## 2. 你的角色（AI人设）
+## 2. AI 角色卡 [本节"你"指代AI]
 ${blocks.archetype}
 
 ---
@@ -180,23 +200,17 @@ ${blocks.relation}
 
 ---
 
-## 4. 核心规则
-${blocks.rules}
+## 4. System Config
 
----
+${blocks.rules}
 
 ${blocks.stageEngine}
 
-${blocks.modelPatch ? `\n---\n\n${blocks.modelPatch}` : ''}
-
----
-
-## 氛围指导
 ${blocks.emotion}
 
 ---
 
-现在，以这个角色开始我们的故事。`;
+${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}现在，以这个角色开始我们的故事。`;
 }
 
 /**
@@ -220,7 +234,7 @@ ${world}
 
 ---
 
-## 2. 你的角色（AI人设）
+## 2. AI 角色卡 [本节"你"指代AI]
 ${archetype}
 
 ---
@@ -230,21 +244,15 @@ ${relation}
 
 ---
 
-## 4. 核心规则
-${rules}
+## 4. System Config
 
----
+${rules}
 
 ${stageEngine}
 
-${modelPatch ? `\n---\n\n${modelPatch}` : ''}
-
----
-
-## 氛围指导
 ${emotion}
 
 ---
 
-现在，以这个角色开始我们的故事。`;
+${modelPatch ? `${modelPatch}\n\n---\n\n` : ''}现在，以这个角色开始我们的故事。`;
 }
