@@ -88,6 +88,18 @@ export const ARCHETYPE_TAGS: Record<string, Tag[]> = {
   'non-human-demon':      ['super.high','rel.hunt','tone.dark'],
   'non-human-ai':         ['super.sci','rel.control','tone.neutral'],
   'non-human-experiment': ['super.sci','rel.hunt','tone.dark','violence.high'],
+
+  // 治愈甜系（新增10个）
+  'sunshine-healer':   ['rel.gentle','rel.protect','tone.light','violence.low','order.daily'],
+  'silly-lovebrain':   ['rel.gentle','tone.light','violence.low','order.daily'],
+  'tsundere-sharp':    ['rel.gentle','tone.neutral','violence.low'],
+  'deadpan-humor':     ['rel.gentle','tone.neutral','violence.low','order.daily'],
+  'soft-puppy':        ['rel.gentle','rel.protect','tone.light','violence.low'],
+  'broken-stray':      ['rel.gentle','rel.redemption','tone.neutral','violence.low'],
+  'growth-loser':      ['rel.gentle','rel.redemption','tone.light','violence.low'],
+  'younger-puppy':     ['rel.gentle','rel.protect','tone.light','violence.low','order.daily'],
+  'fox-lazy':          ['rel.gentle','tone.neutral','violence.low','order.daily'],
+  'engineer-warm':     ['rel.gentle','rel.protect','tone.neutral','violence.low','order.rules'],
 };
 
 // 关系主题 → 标签映射
@@ -103,6 +115,13 @@ export const RELATION_TAGS: Record<string, Tag[]> = {
   'contract_marriage':  ['rel.control','tone.neutral'],
   'redemption':         ['rel.redemption','tone.dark'],
   'amnesia':            ['rel.gentle','rel.redemption','tone.neutral'],
+
+  // 日常甜向（新增5个）
+  'daily_companionship': ['rel.gentle','tone.light','violence.low'],
+  'care_mutual':         ['rel.gentle','rel.protect','tone.light','violence.low'],
+  'childhood_friends':   ['rel.gentle','tone.light','violence.low'],
+  'ambiguous_testing':   ['rel.gentle','tone.neutral','violence.low'],
+  'bickering_lovers':    ['rel.gentle','rel.enemy','tone.neutral','violence.low'],
 };
 
 // 关键轴（用于加权评分）
