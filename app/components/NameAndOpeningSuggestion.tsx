@@ -2,39 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import { usePromptBlocks } from '@/app/store/promptBlocks';
-
-const AI_NAMES = [
-  '言希', '辰逸', '慕言', '时御', '沈夜',
-  '江寒', '顾凉', '叶澜', '陆深', '宋白',
-  '苏瑾', '林渊', '周墨', '夏凉', '秦朗',
-  '韩越', '谢寒', '程默', '许言', '萧寒',
-  '唐夜', '段风', '齐明', '贺深', '方舟',
-  '魏澜', '邱羽', '丁白', '雷霆', '钱枫'
-];
-
-const OPENING_SUGGESTIONS = [
-  '早上好',
-  '你怎么在这',
-  '好久不见',
-  '今天天气不错',
-  '等你很久了'
-];
+import { useSelectionStore } from '@/app/store/selection';
+import { getRandomName, getRandomOpening } from '@/app/utils/nameHints';
 
 export default function NameAndOpeningSuggestion() {
   const { current, setBlock } = usePromptBlocks();
+  const { characterMotherId } = useSelectionStore();
   const [localName, setLocalName] = useState(current.characterName || '');
   const [localOpening, setLocalOpening] = useState(current.openingLine || '');
 
-  // 随机生成名字
+  // 随机生成名字（基于人设母类）
   const randomName = () => {
-    const name = AI_NAMES[Math.floor(Math.random() * AI_NAMES.length)];
+    const name = getRandomName(characterMotherId);
     setLocalName(name);
     setBlock('characterName', name);
   };
 
-  // 随机生成开场句
+  // 随机生成开场句（基于人设母类）
   const randomOpening = () => {
-    const opening = OPENING_SUGGESTIONS[Math.floor(Math.random() * OPENING_SUGGESTIONS.length)];
+    const opening = getRandomOpening(characterMotherId);
     setLocalOpening(opening);
     setBlock('openingLine', opening);
   };
