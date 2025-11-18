@@ -1,75 +1,113 @@
-import type { CharacterMother } from '@/app/data/uiPrompts';
-
-/**
- * 根据人设母类提供匹配的名字库
- */
-export const NAME_POOLS: Record<CharacterMother['id'], string[]> = {
-  // 治愈日常 - 温暖、柔和、阳光的名字
-  healing: [
-    '晨曦', '暖阳', '言希', '柔风', '明朗',
-    '温言', '和煦', '宁安', '清和', '景澄',
-    '沐晨', '时暖', '宜修', '念安', '舒白'
+// 名字库定义
+const NAME_POOLS = {
+  fantasy: [
+    '塞勒斯',
+    '艾泽尔',
+    '格里安',
+    '路西恩',
+    '瓦伦',
+    '奥斯汀',
+    '塞巴斯',
+    '卡莱尔',
   ],
-
-  // 欢脱互怼 - 俏皮、活泼、有趣的名字
-  banter: [
-    '顾怼', '言啰', '墨损', '慕皮', '时怼',
-    '苏吵', '夏闹', '叶皮', '林闹', '江损',
-    '陆怼', '周怼', '许吵', '谢皮', '秦闹'
+  ancient: [
+    '慕寒',
+    '沈昭',
+    '夜冥',
+    '凌渊',
+    '司寒',
+    '墨染',
+    '霄云',
   ],
-
-  // 守护占有 - 强势、霸气、可靠的名字
-  protective: [
-    '御天', '镇渊', '萧战', '凌霄', '慕御',
-    '北辰', '轩墨', '靳野', '厉风', '云擎',
-    '沈御', '陆深', '封翊', '景擎', '墨凛'
+  modern: [
+    '陈默',
+    '林深',
+    '顾衍',
+    '江城',
+    '温言',
+    '苏见',
+    '周洛',
+    '傅晏',
+    '宋辰',
+    '许安',
   ],
-
-  // 极限拉扯 - 深沉、高冷、神秘的名字
-  manipulation: [
-    '慕寒', '寒川', '清冽', '霜白', '凛冬',
-    '顾寒', '冷澈', '冰渊', '霁月', '凉薄',
-    '沈寒', '谢冷', '萧澈', '林冽', '江寒'
+  scifi: [
+    '凯尔',
+    '零号',
+    '诺亚-07',
+    '阿尔法',
+    '艾登',
   ],
+};
 
-  // 危险禁忌 - 危险、锋利、疯狂的名字
-  danger: [
-    '夜殇', '血凛', '魔煞', '暗夜', '冥渊',
-    '罗刹', '修罗', '阎罗', '幽冥', '煞神',
-    '墨染', '夜魇', '凶祟', '罪孽', '堕天'
-  ],
+// 世界观 → 名字池映射
+const WORLD_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
+  // 现代都市
+  'modern-light': 'modern',
+  'modern-dark': 'modern',
+  'modern-mafia': 'modern',
 
-  // 破碎救赎 - 沧桑、悲情、残破的名字
-  broken: [
-    '残墨', '碎影', '孤澜', '断刃', '裂痕',
-    '寒烬', '灰烬', '残念', '废墟', '枯骨',
-    '破晓', '余烬', '残生', '疤痕', '伤痕'
-  ]
+  // 校园
+  'academy-normal': 'modern',
+  'academy-elite': 'modern',
+
+  // 西幻宫廷
+  'fantasy-court': 'fantasy',
+  'fantasy-magic': 'fantasy',
+
+  // 赛博星际
+  'cyber-punk': 'scifi',
+  'cyber-abo': 'scifi',
+
+  // 废土末世
+  'apoc-survival': 'scifi',
+  'apoc-virus': 'scifi',
+};
+
+// 人设 → 名字池映射（优先级高于世界观）
+const ARCHETYPE_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
+  'non-human-god': 'fantasy',
+  'non-human-demon': 'fantasy',
+  'non-human-ai': 'scifi',
+  'non-human-experiment': 'scifi',
+  'broken-strong': 'ancient',
+  'broken-ptsd': 'ancient',
 };
 
 /**
- * 根据人设母类ID获取名字建议
+ * 根据世界观和人设获取匹配的名字池
  */
-export function getNameSuggestions(characterMotherId: string | null): string[] {
-  if (!characterMotherId) {
-    // 如果没有选择人设，返回通用名字库
-    return [
-      '言希', '辰逸', '慕言', '时御', '沈夜',
-      '江寒', '顾凉', '叶澜', '陆深', '宋白',
-      '苏瑾', '林渊', '周墨', '夏凉', '秦朗'
-    ];
+function getNamePool(worldBranchId: string | null, archetypeId: string | null): string[] {
+  // 优先检查人设映射
+  if (archetypeId && ARCHETYPE_TO_NAME_POOL[archetypeId]) {
+    const poolKey = ARCHETYPE_TO_NAME_POOL[archetypeId];
+    return NAME_POOLS[poolKey];
   }
 
-  const pool = NAME_POOLS[characterMotherId as CharacterMother['id']];
-  return pool || NAME_POOLS.healing; // 默认返回治愈系名字
+  // 其次检查世界观映射
+  if (worldBranchId && WORLD_TO_NAME_POOL[worldBranchId]) {
+    const poolKey = WORLD_TO_NAME_POOL[worldBranchId];
+    return NAME_POOLS[poolKey];
+  }
+
+  // 默认返回现代名字池
+  return NAME_POOLS.modern;
 }
 
 /**
  * 从名字池中随机选择一个名字
  */
-export function getRandomName(characterMotherId: string | null): string {
-  const pool = getNameSuggestions(characterMotherId);
-  return pool[Math.floor(Math.random() * pool.length)];
+export function getRandomName(worldBranchId: string | null, archetypeId: string | null): string {
+  const pool = getNamePool(worldBranchId, archetypeId);
+  const randomIndex = Math.floor(Math.random() * pool.length);
+  return pool[randomIndex];
+}
+
+/**
+ * 获取名字建议列表（返回匹配池中的所有名字）
+ */
+export function getNameSuggestions(worldBranchId: string | null, archetypeId: string | null): string[] {
+  return getNamePool(worldBranchId, archetypeId);
 }
 
 /**

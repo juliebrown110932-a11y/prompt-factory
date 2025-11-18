@@ -7,13 +7,13 @@ import { getRandomName, getRandomOpening } from '@/app/utils/nameHints';
 
 export default function NameAndOpeningSuggestion() {
   const { current, setBlock } = usePromptBlocks();
-  const { characterMotherId } = useSelectionStore();
+  const { archetypeId, worldBranchId, characterMotherId } = useSelectionStore();
   const [localName, setLocalName] = useState(current.characterName || '');
   const [localOpening, setLocalOpening] = useState(current.openingLine || '');
 
-  // 随机生成名字（基于人设母类）
+  // 随机生成名字（基于世界观和人设）
   const randomName = () => {
-    const name = getRandomName(characterMotherId);
+    const name = getRandomName(worldBranchId, archetypeId);
     setLocalName(name);
     setBlock('characterName', name);
   };
