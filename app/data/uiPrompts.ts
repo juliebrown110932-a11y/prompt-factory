@@ -98,7 +98,7 @@ export const UI_QUESTIONS = {
   characterB: '你心目中，他是什么样的？',
   characterC: '他对你的方式是——', // 可选tone
 
-  relation: '你们之间，是——',
+  relation: '你们的关系，会如何发展？',
   relationArc: '而这段关系的走向会是——',
 
   world: '这一切，会发生在——',
