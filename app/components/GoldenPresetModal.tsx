@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GOLDEN_PRESETS, type GoldenPreset } from '@/app/data/presets';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 import { getRandomName } from '@/app/utils/nameHints';
@@ -72,7 +72,7 @@ export default function GoldenPresetModal({ isOpen, onClose }: Props) {
 
   // 复制全部
   const handleCopy = () => {
-    const fullContent = `角色名：${characterName}\n\n开场建议：${openingSuggestion}\n\n${generatedPrompt}`;
+    const fullContent = `AI 角色名：${characterName}\n\n开场建议：${openingSuggestion}\n\n${generatedPrompt}`;
     navigator.clipboard.writeText(fullContent).then(
       () => {
         alert('已复制到剪贴板！');
@@ -83,6 +83,19 @@ export default function GoldenPresetModal({ isOpen, onClose }: Props) {
       }
     );
   };
+
+  // 弹窗打开时自动生成一套，关闭时清理状态
+  useEffect(() => {
+    if (isOpen && !currentPreset) {
+      generateRandomPreset();
+    } else if (!isOpen) {
+      // 关闭时清理状态，下次打开重新生成
+      setCurrentPreset(null);
+      setCharacterName('');
+      setOpeningSuggestion('');
+      setGeneratedPrompt('');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -131,7 +144,7 @@ export default function GoldenPresetModal({ isOpen, onClose }: Props) {
 
               {/* 角色名 */}
               <div className="mb-4">
-                <p className="font-medium text-gray-700 mb-2">角色名：</p>
+                <p className="font-medium text-gray-700 mb-2">AI 角色名：</p>
                 <p className="text-gray-800 text-lg">{characterName}</p>
               </div>
 
@@ -153,13 +166,7 @@ export default function GoldenPresetModal({ isOpen, onClose }: Props) {
             </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500 mb-6">点击下方按钮，为你随机推荐一套经典配置</p>
-              <button
-                onClick={generateRandomPreset}
-                className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all shadow-md hover:shadow-lg"
-              >
-                🎲 抽取经典搭配
-              </button>
+              <p className="text-gray-500">正在生成...</p>
             </div>
           )}
         </div>
