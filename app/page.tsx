@@ -9,6 +9,7 @@ import { RelationStep } from '@/app/components/steps/RelationStep';
 import { WorldStep } from '@/app/components/steps/WorldStep';
 import { SelectionPreview } from '@/app/components/SelectionPreview';
 import PromptResult from '@/app/components/PromptResult';
+import GoldenPresetModal from '@/app/components/GoldenPresetModal';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 import type { IntroTone } from '@/app/utils/introComposer';
 import type { EmotionParams } from '@/app/utils/emotionRewriter';
@@ -21,6 +22,7 @@ export default function Home() {
   const [risk, setRisk] = useState<EmotionParams['risk']>(1);
   const [variant, setVariant] = useState<number>(0);
   const [modelId, setModelId] = useState<ModelId | undefined>(undefined);
+  const [showPresetModal, setShowPresetModal] = useState(false);
 
   const {
     characterMotherId,
@@ -175,6 +177,17 @@ export default function Home() {
           <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-gray-600">
             三步创造属于你的他。
           </p>
+
+          {/* 经典搭配入口 */}
+          <div className="mt-4">
+            <span className="text-gray-500 text-sm">不知道选什么？</span>
+            <button
+              onClick={() => setShowPresetModal(true)}
+              className="ml-2 text-purple-600 hover:text-purple-700 font-medium hover:underline transition-all"
+            >
+              ✨ 经典搭配
+            </button>
+          </div>
         </div>
       </div>
 
@@ -212,6 +225,12 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* 经典搭配弹窗 */}
+      <GoldenPresetModal
+        isOpen={showPresetModal}
+        onClose={() => setShowPresetModal(false)}
+      />
     </>
   );
 }
