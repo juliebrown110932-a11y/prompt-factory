@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { usePromptBlocks } from '@/app/store/promptBlocks';
 import { useSelectionStore } from '@/app/store/selection';
-import { getRandomName, getRandomOpening } from '@/app/utils/nameHints';
+import { getRandomName } from '@/app/utils/nameHints';
+import { getRandomOpening } from '@/app/utils/openingHints';
 
 export default function NameAndOpeningSuggestion() {
   const { current, setBlock } = usePromptBlocks();
@@ -18,9 +19,9 @@ export default function NameAndOpeningSuggestion() {
     setBlock('characterName', name);
   };
 
-  // 随机生成开场句（基于人设母类）
+  // 随机生成开场句（基于人设）
   const randomOpening = () => {
-    const opening = getRandomOpening(characterMotherId);
+    const opening = getRandomOpening(archetypeId);
     setLocalOpening(opening);
     setBlock('openingLine', opening);
   };
