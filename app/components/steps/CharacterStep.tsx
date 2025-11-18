@@ -1,140 +1,108 @@
 'use client';
 
+import { useState } from 'react';
 import { useSelectionStore } from '@/app/store/selection';
 import { CHARACTER_MOTHERS, UI_QUESTIONS } from '@/app/data/uiPrompts';
+import { characterOptions } from '@/app/data/options';
 
 export function CharacterStep() {
   const {
     characterMotherId,
-    archetypeId,
-    archetypeToneId,
     setCharacterMother,
+    archetypeId,
     setArchetype,
-    setArchetypeTone,
   } = useSelectionStore();
 
-  const selectedMother = CHARACTER_MOTHERS.find((m) => m.id === characterMotherId);
-  const hasTones = selectedMother?.tones && selectedMother.tones.length > 0;
+  // 展开状态（用于显示描述）
+  const [expandedId, setExpandedId] = useState<string | null>(archetypeId);
+
+  const selectedMother = CHARACTER_MOTHERS.find(m => m.id === characterMotherId);
+
+  const handleClickArchetype = (id: string) => {
+    // 如果点击已展开的，收起它
+    if (expandedId === id) {
+      setExpandedId(null);
+    } else {
+      // 展开新的（自动收起旧的）
+      setExpandedId(id);
+      // 同时更新选中状态
+      setArchetype(id);
+    }
+  };
 
   return (
-    <div className="space-y-8">
-      {/* Step 1-A: 选择母类 */}
+    <div>
+      {/* 第一步：选择恋爱体验 */}
       {!characterMotherId && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-800">
-            {UI_QUESTIONS.characterA}
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div>
+          <h2 className="text-xl font-medium mb-6">{UI_QUESTIONS.characterA}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {CHARACTER_MOTHERS.map((mother) => (
               <button
                 key={mother.id}
                 onClick={() => setCharacterMother(mother.id)}
-                className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-center"
+                className="p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400 transition-colors text-center"
               >
-                <span className="font-semibold text-gray-800">{mother.label}</span>
+                <span className="text-lg font-medium">{mother.label}</span>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Step 1-B: 选择子archetype */}
-      {characterMotherId && !archetypeId && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-800">
-              {UI_QUESTIONS.characterB}
-            </h3>
-            <button
-              onClick={() => setCharacterMother('')}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              ← 返回重选
-            </button>
-          </div>
-          <div className="mb-4 p-3 bg-purple-50 rounded-lg">
-            <span className="text-sm text-purple-700 font-medium">
-              {selectedMother?.label} · {selectedMother?.echo}
-            </span>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {selectedMother?.archetypes.map((archetype) => (
-              <button
-                key={archetype.id}
-                onClick={() => setArchetype(archetype.id)}
-                className="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all text-center"
-              >
-                <span className="font-medium text-gray-800">{archetype.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Step 1-C: 可选tone微调 */}
-      {characterMotherId && archetypeId && hasTones && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-800">
-              {UI_QUESTIONS.characterC}
-            </h3>
-            <button
-              onClick={() => setArchetype('')}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              ← 返回重选
-            </button>
-          </div>
-          <div className="mb-4 p-3 bg-purple-50 rounded-lg">
-            <span className="text-sm text-purple-700 font-medium">
-              {selectedMother?.archetypes.find((a) => a.id === archetypeId)?.label}
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {selectedMother?.tones?.map((tone) => (
-              <button
-                key={tone.id}
-                onClick={() => setArchetypeTone(tone.id)}
-                className={`p-4 rounded-xl border-2 transition-all text-center ${
-                  archetypeToneId === tone.id
-                    ? 'border-purple-500 bg-purple-100'
-                    : 'border-gray-200 hover:border-purple-400 hover:bg-purple-50'
-                }`}
-              >
-                <span className="font-medium text-gray-800">{tone.label}</span>
-              </button>
-            ))}
-          </div>
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => setArchetypeTone(null)}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              跳过此步（使用默认语气）
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Step 1-C: 无tone选项时的确认 */}
-      {characterMotherId && archetypeId && !hasTones && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-gray-800">已选择</h3>
-            <button
-              onClick={() => setArchetype('')}
-              className="text-sm text-gray-500 hover:text-gray-700"
-            >
-              ← 返回重选
-            </button>
-          </div>
-          <div className="p-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
-            <div className="text-center">
-              <p className="text-sm text-gray-600 mb-2">{selectedMother?.label}</p>
-              <p className="text-lg font-bold text-gray-800">
-                {selectedMother?.archetypes.find((a) => a.id === archetypeId)?.label}
-              </p>
+      {/* 第二步：选择具体人设（手风琴式） */}
+      {characterMotherId && selectedMother && (
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm mb-2">
+                {selectedMother.label}
+              </div>
+              <h2 className="text-xl font-medium">{UI_QUESTIONS.characterB}</h2>
             </div>
+            <button
+              onClick={() => {
+                setCharacterMother('');
+                setArchetype('');
+                setExpandedId(null);
+              }}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              ← 返回重选
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {selectedMother.archetypes.map((arch) => {
+              const detail = characterOptions.find(opt => opt.id === arch.id);
+              const isExpanded = expandedId === arch.id;
+              const isSelected = archetypeId === arch.id;
+
+              return (
+                <div key={arch.id}>
+                  {/* 人设按钮 */}
+                  <button
+                    onClick={() => handleClickArchetype(arch.id)}
+                    className={`w-full p-4 border-2 rounded-lg text-left transition-all ${
+                      isSelected
+                        ? 'border-purple-500 bg-purple-50'
+                        : 'border-gray-200 hover:border-purple-300'
+                    }`}
+                  >
+                    <span className="font-medium">{arch.label}</span>
+                  </button>
+
+                  {/* 展开的描述框 */}
+                  {isExpanded && detail && (
+                    <div className="mt-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                        {detail.description}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

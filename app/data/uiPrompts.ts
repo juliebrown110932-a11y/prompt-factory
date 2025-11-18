@@ -94,8 +94,8 @@ export const CHARACTER_MOTHERS: CharacterMother[] = [
 
 // 关系与世界的"问题语句"皮肤（ID沿用现有）
 export const UI_QUESTIONS = {
-  characterA: '他给你的印象是——',
-  characterB: '准确地说，他是——',
+  characterA: '你想要哪种恋爱体验？',
+  characterB: '你心目中，他是什么样的？',
   characterC: '他对你的方式是——', // 可选tone
 
   relation: '你们之间，是——',
