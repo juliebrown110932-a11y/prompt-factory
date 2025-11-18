@@ -180,10 +180,9 @@ export default function Home() {
 
           {/* 经典搭配入口 */}
           <div className="mt-4">
-            <span className="text-gray-500 text-sm">不知道选什么？</span>
             <button
               onClick={() => setShowPresetModal(true)}
-              className="ml-2 text-purple-600 hover:text-purple-700 font-medium hover:underline transition-all"
+              className="text-purple-600 hover:text-purple-700 font-medium hover:underline transition-all"
             >
               ✨ 经典搭配
             </button>
