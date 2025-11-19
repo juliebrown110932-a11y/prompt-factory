@@ -71,7 +71,9 @@ const ARCHETYPE_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
   'non-human-ai': 'scifi',
   'non-human-experiment': 'scifi',
   'broken-strong': 'ancient',
+  'broken-destruction': 'ancient',
   'broken-ptsd': 'ancient',
+  'villain-fallen': 'fantasy',  // 堕落黑天使 → 西幻名字
 };
 
 /**
