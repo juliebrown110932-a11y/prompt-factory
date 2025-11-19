@@ -109,7 +109,7 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
               <h3 className="text-base font-semibold text-gray-800">⚙️ System Config</h3>
               <p className="text-xs text-gray-500 mt-0.5">系统配置（互动规则、阶段控制、氛围指导）</p>
             </div>
-            <button className="text-sm text-gray-600 hover:text-gray-800 font-medium px-3 py-1 rounded hover:bg-gray-100 transition-colors">
+            <button className="text-sm text-gray-600 hover:text-gray-800 font-medium px-3 py-1 rounded hover:bg-gray-100 transition-colors whitespace-nowrap">
               {isSystemConfigExpanded ? '▲ 收起' : '▼ 展开查看/编辑'}
             </button>
           </div>

@@ -35,7 +35,7 @@ export function CharacterStep() {
       {/* 第一步：选择恋爱体验 */}
       {!characterMotherId && (
         <div>
-          <h2 className="text-xl font-medium mb-6">{UI_QUESTIONS.characterA}</h2>
+          <h2 className="text-lg md:text-xl font-medium mb-6">{UI_QUESTIONS.characterA}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {CHARACTER_MOTHERS.map((mother) => (
               <button
@@ -58,7 +58,7 @@ export function CharacterStep() {
               <div className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm mb-2">
                 {selectedMother.label}
               </div>
-              <h2 className="text-xl font-medium">{UI_QUESTIONS.characterB}</h2>
+              <h2 className="text-lg md:text-xl font-medium">{UI_QUESTIONS.characterB}</h2>
             </div>
             <button
               onClick={() => {
@@ -66,9 +66,9 @@ export function CharacterStep() {
                 setArchetype('');
                 setExpandedId(null);
               }}
-              className="text-sm text-gray-500 hover:text-gray-700"
+              className="text-sm text-gray-500 hover:text-gray-700 whitespace-nowrap"
             >
-              ← 返回重选
+              ← 重选
             </button>
           </div>
 

@@ -35,7 +35,7 @@ export function RelationStep() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium mb-6">{UI_QUESTIONS.relation}</h2>
+      <h2 className="text-lg md:text-xl font-medium mb-6">{UI_QUESTIONS.relation}</h2>
 
       <div className="space-y-2">
         {RELATIONS.map((relation) => {
