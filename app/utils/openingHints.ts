@@ -62,6 +62,18 @@ export const OPENING_POOLS = {
     "实验室停电，隔离门失效。黑暗中，我听到你的呼吸声越来越近。",
     "我端着食物靠近你，你突然抓住了我的手腕。",
   ],
+  villain: [
+    "我看到你从天空坠落，折断的翅膀在身后拖行，羽毛染成了黑色。",
+    "神殿的火光中，我发现你站在祭坛上，你背后的光环已经碎裂。",
+    "你的羽毛散落一地，我走过来时，你警告我：'别碰我。'",
+    "我在废弃教堂里找到你，你蜷缩在角落，翅膀上全是伤痕。",
+  ],
+  obsessed: [
+    "我放学回家，你已经在客厅等我，视线一直没离开过门口。",
+    "深夜，你推开我的房门，借口是来看我有没有盖好被子。",
+    "我的手机响了，你先我一步拿起来：'谁发的消息？'",
+    "你坐在我床边，轻抚我的头发：'只有我最了解你。'",
+  ],
 };
 
 // 人设 → 开场白类别映射
@@ -102,12 +114,12 @@ const ARCHETYPE_TO_CATEGORY: Record<string, keyof typeof OPENING_POOLS> = {
   'yandere-cage': 'danger',
   'yandere-gentle': 'danger',
   'yandere-self-harm': 'danger',
-  'controller-obsessed': 'danger',
+  'controller-obsessed': 'obsessed',  // 年上掌控者（病态依恋）→ 父亲/继父场景
   'rival-love-hate': 'danger',
   'rival-justice': 'danger',
   'villain-ruthless': 'danger',
   'villain-elegant': 'danger',
-  'villain-fallen': 'danger',
+  'villain-fallen': 'villain',  // 堕落黑天使 → 堕落天使场景
 
   // 破碎救赎
   'broken-strong': 'broken',
