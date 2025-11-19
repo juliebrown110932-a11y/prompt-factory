@@ -25,7 +25,7 @@ export function WorldStep() {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-bold text-gray-800">
+      <h3 className="text-lg md:text-xl font-bold text-gray-800">
         {UI_QUESTIONS.world}
       </h3>
 

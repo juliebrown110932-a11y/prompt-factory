@@ -34,7 +34,7 @@ export default function NameAndOpeningSuggestion() {
   };
 
   // 开场句输入变化
-  const handleOpeningChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOpeningChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setLocalOpening(value);
     setBlock('openingLine', value);
@@ -83,12 +83,12 @@ export default function NameAndOpeningSuggestion() {
             🎲
           </button>
         </div>
-        <input
-          type="text"
+        <textarea
           value={localOpening}
           onChange={handleOpeningChange}
           placeholder="点击骰子生成，或直接输入..."
-          className="w-full px-3 py-2 border border-purple-200 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          rows={2}
+          className="w-full px-3 py-2 border border-purple-200 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
         />
       </div>
     </div>
