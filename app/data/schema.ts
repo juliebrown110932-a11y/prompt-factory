@@ -5,7 +5,8 @@ export type WorldBranch = {
      | 'campus.normal' | 'campus.elite'
      | 'court.intrigue' | 'court.magic'
      | 'future.cyber' | 'future.abo'
-     | 'apoc.survival' | 'apoc.virus';
+     | 'apoc.survival' | 'apoc.virus'
+     | 'ancient-jianghu' | 'ancient-cultivation' | 'ancient-court';
   label: string;           // 显示名
   branchBrief?: string;    // 分支简介（40–60字）
   description?: string;    // 可选简介（UI可不显示）
@@ -13,7 +14,7 @@ export type WorldBranch = {
 };
 
 export type WorldMother = {
-  id: 'modern' | 'campus' | 'court' | 'future' | 'apoc';
+  id: 'modern' | 'campus' | 'court' | 'future' | 'apoc' | 'ancient-fantasy';
   label: string;           // 母观名（例：现代都市）
   tagline?: string;        // 一句话定调
   summary?: string;        // 80–120字设定简介
