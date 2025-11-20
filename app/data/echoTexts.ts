@@ -395,5 +395,9 @@ export const WORLD_ECHO: Record<string, string> = {
   'future.abo': '信息素支配一切，本能无法抗拒',
 
   'apoc.survival': '废墟之上，活着比爱更难',
-  'apoc.virus': '病毒肆虐，你的体温是唯一温暖'
+  'apoc.virus': '病毒肆虐，你的体温是唯一温暖',
+
+  'ancient-jianghu': '江湖路远，刀剑与你，皆是归途。',
+  'ancient-cultivation': '三千大道，只为渡你成仙。',
+  'ancient-court': '朝堂如局，为你，也为这锦绣江山。'
 };

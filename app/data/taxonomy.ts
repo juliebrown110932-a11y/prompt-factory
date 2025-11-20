@@ -31,72 +31,76 @@ export const WORLD_TAGS: Record<string, Tag[]> = {
 
   'apoc.survival': ['era.apoc','super.none','order.anarchy','violence.high','tone.dark'],
   'apoc.virus':    ['era.apoc','super.low','order.anarchy','violence.high','tone.dark'],
+
+  'ancient-jianghu':     ['era.court','super.low','order.dark','violence.high','tone.neutral'],
+  'ancient-cultivation': ['era.court','super.high','order.rules','violence.mid','tone.neutral'],
+  'ancient-court':       ['era.court','super.none','order.rules','violence.mid','tone.dark'],
 };
 
 // 人设 archetype → 标签映射
 export const ARCHETYPE_TAGS: Record<string, Tag[]> = {
   // 傲娇
   'tsundere-honest': ['rel.gentle','tone.neutral','violence.low','order.daily'],
-  'tsundere-cat':    ['rel.obsess','tone.neutral','violence.mid'],
+  'tsundere-cat':    ['rel.obsess','tone.neutral','violence.mid','order.daily'],
 
   // 冷面
-  'cold-restrained': ['rel.control','tone.neutral','violence.low'],
-  'cold-cunning':    ['rel.control','tone.dark','violence.mid'],
+  'cold-restrained': ['rel.control','tone.neutral','violence.low','order.rules'],
+  'cold-cunning':    ['rel.control','tone.dark','violence.mid','order.dark'],
 
   // 病娇
   'yandere-cage':      ['rel.obsess','tone.dark','violence.high','order.dark'],
-  'yandere-gentle':    ['rel.obsess','tone.dark','violence.high'],
-  'yandere-self-harm': ['rel.obsess','tone.dark','violence.mid'],
+  'yandere-gentle':    ['rel.obsess','tone.dark','violence.high','order.dark'],
+  'yandere-self-harm': ['rel.obsess','tone.dark','violence.mid','order.dark'],
 
   // 忠犬
-  'loyal-obedient':   ['rel.protect','tone.light','violence.low'],
-  'loyal-protective': ['rel.protect','rel.obsess','violence.high','tone.dark'],
+  'loyal-obedient':   ['rel.protect','tone.light','violence.low','order.daily'],
+  'loyal-protective': ['rel.protect','rel.obsess','violence.high','tone.dark','order.dark'],
 
   // 腹黑
-  'cunning-gentleman':   ['rel.control','tone.neutral','violence.low'],
-  'cunning-manipulator': ['rel.control','tone.dark','violence.mid'],
+  'cunning-gentleman':   ['rel.control','tone.neutral','violence.low','order.rules'],
+  'cunning-manipulator': ['rel.control','tone.dark','violence.mid','order.dark'],
 
   // 掌控
   'controller-chess':    ['rel.control','tone.neutral','violence.low','order.rules'],
-  'controller-obsessed': ['rel.obsess','rel.control','tone.dark','violence.mid'],
-  'controller-gentle':   ['rel.control','rel.protect','tone.neutral','violence.low'],
+  'controller-obsessed': ['rel.obsess','rel.control','tone.dark','violence.mid','order.dark'],
+  'controller-gentle':   ['rel.control','rel.protect','tone.neutral','violence.low','order.rules'],
 
   // 反派
   'villain-ruthless': ['rel.hunt','tone.dark','violence.high','order.anarchy'],
-  'villain-elegant':  ['rel.hunt','tone.dark','violence.high'],
-  'villain-fallen':   ['rel.hunt','tone.dark','violence.high','rel.redemption'],
+  'villain-elegant':  ['rel.hunt','tone.dark','violence.high','order.dark'],
+  'villain-fallen':   ['rel.hunt','tone.dark','violence.high','rel.redemption','order.dark'],
 
   // 宿敌
-  'rival-love-hate': ['rel.enemy','tone.dark','violence.mid'],
-  'rival-justice':   ['rel.enemy','tone.dark','violence.mid'],
+  'rival-love-hate': ['rel.enemy','tone.dark','violence.mid','order.dark'],
+  'rival-justice':   ['rel.enemy','tone.dark','violence.mid','order.rules'],
 
   // 掠夺
   'predator-primal': ['rel.hunt','tone.dark','violence.high','order.anarchy'],
-  'predator-hunt':   ['rel.hunt','tone.dark','violence.mid'],
+  'predator-hunt':   ['rel.hunt','tone.dark','violence.mid','order.dark'],
 
   // 守护
-  'guardian-moonlight': ['rel.protect','tone.light','violence.low'],
-  'guardian-alpha':     ['rel.protect','rel.obsess','violence.mid','tone.dark'],
+  'guardian-moonlight': ['rel.protect','tone.light','violence.low','order.daily'],
+  'guardian-alpha':     ['rel.protect','rel.obsess','violence.mid','tone.dark','order.dark'],
 
   // 战损 / 破碎
-  'broken-strong':      ['rel.redemption','tone.dark','violence.mid'],
-  'broken-destruction': ['rel.redemption','tone.dark','violence.mid'],
-  'broken-ptsd':        ['rel.redemption','tone.dark','violence.mid'],
+  'broken-strong':      ['rel.redemption','tone.dark','violence.mid','order.dark'],
+  'broken-destruction': ['rel.redemption','tone.dark','violence.mid','order.dark'],
+  'broken-ptsd':        ['rel.redemption','tone.dark','violence.mid','order.dark'],
 
   // 人外
-  'non-human-god':        ['super.high','rel.control','tone.neutral'],
-  'non-human-demon':      ['super.high','rel.hunt','tone.dark'],
-  'non-human-ai':         ['super.sci','rel.control','tone.neutral'],
-  'non-human-experiment': ['super.sci','rel.hunt','tone.dark','violence.high'],
+  'non-human-god':        ['super.high','rel.control','tone.neutral','order.rules'],
+  'non-human-demon':      ['super.high','rel.hunt','tone.dark','order.dark'],
+  'non-human-ai':         ['super.sci','rel.control','tone.neutral','order.rules'],
+  'non-human-experiment': ['super.sci','rel.hunt','tone.dark','violence.high','order.anarchy'],
 
   // 治愈甜系（新增10个）
   'sunshine-healer':   ['rel.gentle','rel.protect','tone.light','violence.low','order.daily'],
   'silly-lovebrain':   ['rel.gentle','tone.light','violence.low','order.daily'],
-  'tsundere-sharp':    ['rel.gentle','tone.neutral','violence.low'],
+  'tsundere-sharp':    ['rel.gentle','tone.neutral','violence.low','order.daily'],
   'deadpan-humor':     ['rel.gentle','tone.neutral','violence.low','order.daily'],
-  'soft-puppy':        ['rel.gentle','rel.protect','tone.light','violence.low'],
-  'broken-stray':      ['rel.gentle','rel.redemption','tone.neutral','violence.low'],
-  'growth-loser':      ['rel.gentle','rel.redemption','tone.light','violence.low'],
+  'soft-puppy':        ['rel.gentle','rel.protect','tone.light','violence.low','order.daily'],
+  'broken-stray':      ['rel.gentle','rel.redemption','tone.neutral','violence.low','order.daily'],
+  'growth-loser':      ['rel.gentle','rel.redemption','tone.light','violence.low','order.daily'],
   'younger-puppy':     ['rel.gentle','rel.protect','tone.light','violence.low','order.daily'],
   'fox-lazy':          ['rel.gentle','tone.neutral','violence.low','order.daily'],
   'engineer-warm':     ['rel.gentle','rel.protect','tone.neutral','violence.low','order.rules'],

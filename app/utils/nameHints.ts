@@ -62,6 +62,11 @@ const WORLD_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
   // 废土末世
   'apoc-survival': 'scifi',
   'apoc-virus': 'scifi',
+
+  // 古言仙侠（3个分支都用古风名字）
+  'ancient-jianghu': 'ancient',
+  'ancient-cultivation': 'ancient',
+  'ancient-court': 'ancient',
 };
 
 // 人设 → 名字池映射（优先级高于世界观）
