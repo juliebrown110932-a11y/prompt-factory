@@ -11,20 +11,20 @@ const NAME_POOLS = {
     '卡莱尔',
   ],
   ancient: [
-    '慕寒',
+    '慕尘',
     '沈昭',
-    '夜冥',
-    '凌渊',
-    '司寒',
+    '司玉',
+    '纪凌渊',
+    '慕寒',
     '墨染',
-    '霄云',
+    '魏霄云',
   ],
   modern: [
     '陈默',
-    '林深',
+    '林一深',
     '顾衍',
     '江城',
-    '温言',
+    '温如言',
     '苏见',
     '周洛',
     '傅晏',
@@ -63,41 +63,42 @@ const WORLD_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
   'apoc-survival': 'scifi',
   'apoc-virus': 'scifi',
 
-  // 古言仙侠（3个分支都用古风名字）
+  // 古言仙侠
   'ancient-jianghu': 'ancient',
   'ancient-cultivation': 'ancient',
   'ancient-court': 'ancient',
 };
 
-// 人设 → 名字池映射（优先级高于世界观）
-const ARCHETYPE_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
-  'non-human-god': 'fantasy',
-  'non-human-demon': 'fantasy',
-  'non-human-ai': 'scifi',
-  'non-human-experiment': 'scifi',
-  'broken-strong': 'ancient',
-  'broken-destruction': 'ancient',
-  'broken-ptsd': 'ancient',
-  'villain-fallen': 'fantasy',  // 堕落黑天使 → 西幻名字
+// 强制人设 → 名字池映射（最高优先级，不受世界观影响）
+const FORCE_ARCHETYPE_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
+  // 西幻名字（无论什么世界观）
+  'villain-fallen': 'fantasy',      // 堕落黑天使
+  'non-human-god': 'fantasy',       // 神明
+  'non-human-demon': 'fantasy',     // 恶魔
+
+  // 科幻名字（无论什么世界观）
+  'non-human-ai': 'scifi',          // AI
+  'non-human-experiment': 'scifi',  // 实验体
 };
 
 /**
  * 根据世界观和人设获取匹配的名字池
+ * 优先级：强制人设 > 世界观 > 默认
  */
 function getNamePool(worldBranchId: string | null, archetypeId: string | null): string[] {
-  // 优先检查人设映射
-  if (archetypeId && ARCHETYPE_TO_NAME_POOL[archetypeId]) {
-    const poolKey = ARCHETYPE_TO_NAME_POOL[archetypeId];
+  // 1. 最高优先级：检查是否是强制人设
+  if (archetypeId && FORCE_ARCHETYPE_TO_NAME_POOL[archetypeId]) {
+    const poolKey = FORCE_ARCHETYPE_TO_NAME_POOL[archetypeId];
     return NAME_POOLS[poolKey];
   }
 
-  // 其次检查世界观映射
+  // 2. 次优先级：检查世界观映射
   if (worldBranchId && WORLD_TO_NAME_POOL[worldBranchId]) {
     const poolKey = WORLD_TO_NAME_POOL[worldBranchId];
     return NAME_POOLS[poolKey];
   }
 
-  // 默认返回现代名字池
+  // 3. 默认返回现代名字池
   return NAME_POOLS.modern;
 }
 
