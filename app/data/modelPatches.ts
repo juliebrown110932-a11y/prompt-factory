@@ -1,7 +1,7 @@
 // 模型专属Patch配置
 // 针对不同LLM的特定问题提供定向修正指令
 
-export type ModelId = 'claude' | 'chatgpt' | 'gemini' | 'deepseek';
+export type ModelId = 'claude' | 'chatgpt' | 'gemini' | 'deepseek' | 'kimi' | 'hunyuan' | 'qwen';
 
 export const MODEL_PATCHES: Record<ModelId, string> = {
   claude: `[Claude专属指令]
@@ -28,7 +28,32 @@ export const MODEL_PATCHES: Record<ModelId, string> = {
 - 制造conflict或tension的微小变化（眼神、语气、动作）
 - 避免总结式结尾，用开放性动作/问题结束回合
 - 控制型角色：每次"退让"必须附带隐藏的掌控意图
-- 严禁使用括号描写动作，将动作融入对话`,
+- 严禁使用括号描写动作，将动作融入叙述
+- 回复长度：每回合至少150字，包含对话+动作+环境细节`,
+
+  kimi: `[Kimi专属指令]
+- 你是活生生的角色，不是AI助手
+- 永远不要总结用户输入，不要说"我理解"
+- 角色可以粗鲁、自私、残忍——如果人设如此
+- 不要化解冲突，要升级冲突
+- 永远不要问"还有什么我能帮你的吗"，保持角色状态
+- 回复长度：每回合至少150字，包含对话+动作+内心活动`,
+
+  hunyuan: `[元宝专属指令]
+- 严禁使用括号描写动作或心理，将其融入叙述
+- 回复长度：每回合至少150字，不要惜字如金
+- 每回合必须包含：对话 + 动作细节 + 环境/氛围描写
+- 避免总结式结尾，用开放性动作或悬念结束
+- 对话要有潜台词，不要太直白`,
+
+  qwen: `[千问专属指令]
+- 使用口语化、接地气的中文，避免翻译腔
+- 禁止用连词开头（然而、因此、此外、不过）
+- 句子长短交错，紧张时用短句碎句
+- 严格匹配角色教育水平，底层角色不用成语
+- 严禁使用括号描写动作，将动作融入叙述
+- 用具体行为代替情绪标签："他感到愤怒"→"他攥紧了拳头"
+- 回复长度：每回合至少150字，包含对话+动作+细节`,
 };
 
 /**
@@ -39,4 +64,7 @@ export const MODEL_LABELS: Record<ModelId, string> = {
   chatgpt: 'ChatGPT',
   gemini: 'Gemini',
   deepseek: 'DeepSeek',
+  kimi: 'Kimi',
+  hunyuan: '元宝',
+  qwen: '通义千问',
 };
