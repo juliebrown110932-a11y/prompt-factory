@@ -355,6 +355,9 @@ export function SelectionPreview({ introTone, setIntroTone, risk, setRisk, model
             <option value="chatgpt">ChatGPT</option>
             <option value="gemini">Gemini</option>
             <option value="deepseek">DeepSeek</option>
+            <option value="kimi">Kimi</option>
+            <option value="hunyuan">元宝</option>
+            <option value="qwen">通义千问</option>
           </select>
           <p className="text-xs text-gray-500">
             选择后将添加针对该模型的专属优化指令
