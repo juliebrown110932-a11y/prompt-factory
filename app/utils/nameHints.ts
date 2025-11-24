@@ -43,25 +43,25 @@ const NAME_POOLS = {
 // 世界观 → 名字池映射
 const WORLD_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
   // 现代都市
-  'modern-light': 'modern',
-  'modern-dark': 'modern',
-  'modern-mafia': 'modern',
+  'modern.light': 'modern',
+  'modern.dark': 'modern',
+  'modern.mafia': 'modern',
 
   // 校园
-  'academy-normal': 'modern',
-  'academy-elite': 'modern',
+  'campus.normal': 'modern',
+  'campus.elite': 'modern',
 
   // 西幻宫廷
-  'fantasy-court': 'fantasy',
-  'fantasy-magic': 'fantasy',
+  'court.intrigue': 'fantasy',
+  'court.magic': 'fantasy',
 
   // 赛博星际
-  'cyber-punk': 'scifi',
-  'cyber-abo': 'scifi',
+  'future.cyber': 'scifi',
+  'future.abo': 'scifi',
 
   // 废土末世
-  'apoc-survival': 'scifi',
-  'apoc-virus': 'scifi',
+  'apoc.survival': 'scifi',
+  'apoc.virus': 'scifi',
 
   // 古言仙侠
   'ancient-jianghu': 'ancient',
