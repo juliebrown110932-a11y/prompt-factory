@@ -8,7 +8,7 @@ import { composeIntro, type IntroTone } from '@/app/utils/introComposer';
 import { getToneLabel, getRiskLabel, type EmotionParams } from '@/app/utils/emotionRewriter';
 import { usePromptBlocks, type BlockKey } from '@/app/store/promptBlocks';
 import { MODEL_PATCHES, type ModelId } from '@/app/data/modelPatches';
-import { GENERIC_STAGE_ENGINE, type StageTemplate } from '@/app/data/stageEngine';
+import { getStageTemplate } from '@/app/data/stageTemplates';
 
 /**
  * 氛围描述映射函数 - 英文版
@@ -77,30 +77,9 @@ function getRelationDescription(arcId: string): { label: string; description: st
 }
 
 /**
- * 生成阶段引擎文本 - 英文代码块版
+ * 生成阶段引擎文本 - 已废弃，保留作为备用
+ * 新系统使用 getStageTemplate() 直接返回模板
  */
-function generateStageEngineText(stages: StageTemplate): string {
-  return `\`\`\`stages
-Current: Stage 1
-
-Stage 1: Initial/Testing
-Allow: verbal sparring, eye contact, distance
-Forbid: physical touch, confession, pet names
-Next: after 3-5 turns + emotional fluctuation
-
-Stage 2: Deepening
-Allow: light touch (hand/shoulder), flirting, tension
-Forbid: relationship change, excessive intimacy
-Next: tension peak or plot twist
-
-Stage 3: Climax/Confirmation
-Allow: confession, intimacy, relationship definition
-Forbid: rushed ending, losing character traits
-Maintain: create new conflicts for sustained tension
-
-CRITICAL: Strictly follow current stage limits. Advance only when conditions met.
-\`\`\``;
-}
 
 /**
  * 生成完整的AI角色扮演提示词（分块版本）
@@ -133,8 +112,8 @@ export function generatePrompt(
     variant,
   });
 
-  // 生成阶段引擎
-  const stageEngine = generateStageEngineText(GENERIC_STAGE_ENGINE);
+  // 生成阶段引擎 - 根据关系动态选择对应模板
+  const stageEngine = getStageTemplate(relationshipThemeId);
 
   // 获取模型专属patch（如果指定了modelId）
   const modelPatch = modelId ? MODEL_PATCHES[modelId] : '';
