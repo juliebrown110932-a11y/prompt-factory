@@ -115,7 +115,7 @@ export const RELATION_TAGS: Record<string, Tag[]> = {
   'power_imbalance':    ['rel.control','tone.neutral'],
   'second_chance':      ['rel.gentle','rel.redemption','tone.neutral'],
   'cat_mouse':          ['rel.hunt','tone.dark'],
-  'care_grooming':      ['rel.protect','rel.control','tone.neutral'],
+  'care_grooming':      ['rel.control','rel.protect','tone.dark','violence.low'],
   'contract_marriage':  ['rel.control','tone.neutral'],
   'redemption':         ['rel.redemption','tone.dark'],
   'amnesia':            ['rel.gentle','rel.redemption','tone.neutral'],
