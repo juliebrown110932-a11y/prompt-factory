@@ -52,7 +52,7 @@ export default function GoldenPresetModal({ isOpen, onClose }: Props) {
 
     // 生成名字和开场白
     const name = getRandomName(preset.config.worldBranchId, preset.config.archetypeId);
-    const opening = getRandomOpening(preset.config.archetypeId);
+    const opening = getRandomOpening(preset.config.archetypeId, preset.config.worldBranchId, preset.config.relationThemeId);
 
     // 生成完整prompt
     const prompt = generatePrompt(

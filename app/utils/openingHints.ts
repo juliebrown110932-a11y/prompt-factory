@@ -1,48 +1,16 @@
 /**
  * 开场白内容库
+ * 匹配优先级：特殊人设 > 世界观类型 + 关系动态
  */
-export const OPENING_POOLS = {
-  healing: [
-    "放学后的教室，只剩我们两个。我收拾好书包，转头问你：'一起回家？'",
-    "深夜便利店，我买完宵夜转身差点撞上你。你接过我手里的袋子：'我送你。'",
-    "我加班到深夜，办公室只剩我一个。门被敲响，你端着宵夜走进来。",
-    "雨突然下大了，我没带伞。你把伞撑到我头顶：'走吧。'",
-  ],
-  banter: [
-    "我故意绕路想避开你，结果在转角撞个正着。你挑眉：'躲我？'",
-    "我的文件被风吹散，你帮我捡起来，顺便吐槽：'这么笨？'",
-    "食堂排队时你突然插在我前面，我正想发火，你回头递给我一个餐盘。",
-    "我踩到你的脚，正要道歉，你先开口：'长眼睛没？'",
-  ],
-  protective: [
-    "人群中有人推搡我，你直接把我拽进怀里，眼神扫向周围。",
-    "我手腕上的伤被你抓住，你的声音很冷：'谁干的？'",
-    "酒吧里有人搭讪我，你突然坐到我旁边，手臂圈住我的椅背。",
-    "我被人堵在巷子里，你的身影出现在巷口。",
-  ],
-  manipulation: [
-    "我以为甩开了你，但回到家发现你已经坐在我的沙发上。",
-    "电梯门关上前，你伸手挡住门，走了进来。电梯突然停了。",
-    "我收到一条匿名消息，内容是我今天的行踪。抬头，你就在咖啡馆对面看着我。",
-    "我的手机响了，是陌生号码。接起后，你的声音传来：'在想我吗？'",
-  ],
-  danger: [
-    "我醒来发现门被锁死，你坐在床边看着我，轻声说：'醒了？'",
-    "我试图逃跑，走廊尽头传来你的脚步声。你的声音响起：'别跑了。'",
-    "深夜，我听到钥匙转动的声音。你推门进来，手里拿着我落在你那里的东西。",
-    "我回头看了你一眼，你笑了：'怕我？'",
-  ],
-  broken: [
-    "雨中，我看到你蜷缩在墙角，浑身是伤。我撑伞走过去。",
-    "我推开门，你正对着镜子发呆，眼神空洞。听到声音，你僵住了。",
-    "废弃天台，你站在边缘。我喊住你，你回头，眼里全是绝望。",
-    "我发现你已经三天没出门了。我敲门，里面没有回应。",
-  ],
+
+// ==================== 特殊人设专属池（最高优先级）====================
+
+const SPECIAL_ARCHETYPE_POOLS: Record<string, string[]> = {
   god: [
     "神殿的光透过彩窗洒下，我跪在神像前祈祷，却听到身后传来脚步声。",
-    "祭祀的夜晚，你是唯一留下的信徒。我降临在你面前。",
+    "祭祀的夜晚，我是唯一留下的信徒。你降临在我面前。",
     "我在古籍中念出了你的真名，天空突然暗下来。",
-    "你献上祭品，我的眼睛突然睁开了。",
+    "我献上祭品，你的眼睛突然睁开了。",
   ],
   demon: [
     "午夜，我完成了召唤阵的最后一笔。黑雾中，你的身影缓缓显现。",
@@ -76,87 +44,341 @@ export const OPENING_POOLS = {
   ],
 };
 
-// 人设 → 开场白类别映射
-const ARCHETYPE_TO_CATEGORY: Record<string, keyof typeof OPENING_POOLS> = {
-  // 治愈日常
-  'sunshine-healer': 'healing',
-  'silly-lovebrain': 'healing',
-  'soft-puppy': 'healing',
-  'broken-stray': 'healing',
-  'growth-loser': 'healing',
-  'younger-puppy': 'healing',
-  'engineer-warm': 'healing',
-  'guardian-moonlight': 'healing',
-
-  // 欢脱互怼
-  'tsundere-honest': 'banter',
-  'tsundere-cat': 'banter',
-  'tsundere-sharp': 'banter',
-  'deadpan-humor': 'banter',
-  'fox-lazy': 'banter',
-
-  // 守护占有
-  'loyal-obedient': 'protective',
-  'loyal-protective': 'protective',
-  'guardian-alpha': 'protective',
-  'predator-primal': 'protective',
-  'cold-restrained': 'protective',
-
-  // 极限拉扯
-  'cold-cunning': 'manipulation',
-  'cunning-gentleman': 'manipulation',
-  'cunning-manipulator': 'manipulation',
-  'controller-chess': 'manipulation',
-  'controller-gentle': 'manipulation',
-  'predator-hunt': 'manipulation',
-
-  // 危险禁忌
-  'yandere-cage': 'danger',
-  'yandere-gentle': 'danger',
-  'yandere-self-harm': 'danger',
-  'controller-obsessed': 'obsessed',  // 年上掌控者（病态依恋）→ 父亲/继父场景
-  'rival-love-hate': 'danger',
-  'rival-justice': 'danger',
-  'villain-ruthless': 'danger',
-  'villain-elegant': 'danger',
-  'villain-fallen': 'villain',  // 堕落黑天使 → 堕落天使场景
-
-  // 破碎救赎
-  'broken-strong': 'broken',
-  'broken-destruction': 'broken',
-  'broken-ptsd': 'broken',
-
-  // 特殊人设（优先级最高）
+// 特殊人设 → 池子映射
+const SPECIAL_ARCHETYPE_TO_POOL: Record<string, keyof typeof SPECIAL_ARCHETYPE_POOLS> = {
   'non-human-god': 'god',
   'non-human-demon': 'demon',
   'non-human-ai': 'ai',
   'non-human-experiment': 'experiment',
+  'villain-fallen': 'villain',
+  'controller-obsessed': 'obsessed',
 };
 
+// 关系动态ID → 池子key映射
+const RELATION_ID_TO_POOL: Record<string, string> = {
+  'daily_companionship': 'daily-companion',
+  'care_mutual': 'caretaker',
+  'childhood_friends': 'childhood',
+  'ambiguous_testing': 'ambiguous',
+  'bickering_lovers': 'bickering',
+  'forbidden': 'forbidden',
+  'contract_marriage': 'contract',
+  'cat_mouse': 'cat-mouse',
+  'care_grooming': 'nurture',
+  'enemies_to_lovers': 'enemies-lovers',
+  'power_imbalance': 'power-play',
+  'pretend_to_real': 'fake-real',
+  'redemption': 'redemption',
+  'second_chance': 'reconciliation',
+  'forced_bond': 'forced-together',
+  'amnesia': 'amnesia',
+};
+
+// ==================== 关系动态开场池（分modern/ancient）====================
+
+const RELATION_POOLS: Record<string, { modern: string[]; ancient: string[] }> = {
+  // 日常甜向类
+  'daily-companion': {
+    modern: [
+      "放学后的教室，只剩我们两个。你收拾好书包，转头问我：'一起回家？'",
+      "深夜便利店，你买完宵夜转身差点撞上我。你把手中的袋子塞给我：'送你了。'",
+      "我加班到深夜，办公室只剩我一个。门被敲响，你拎着宵夜走进来。",
+      "公交站台，雨突然下大了，我没带伞。你把伞撑到我头顶：'走吧。'",
+    ],
+    ancient: [
+      "客栈二楼，我独自用饭。你端着酒壶在对面坐下：'赶路辛苦，我请你。'",
+      "夜深了，藏经阁只剩我一人。你推门进来，递给我一盏灯：'别伤了眼。'",
+      "集市上我被人群挤散，回头时你就在身后。你拉住我的袖子：'跟紧我。'",
+      "雨夜，我在屋檐下避雨。你牵马经过，停下：'我送你一程。'",
+    ],
+  },
+  'caretaker': {
+    modern: [
+      "我发烧躺在床上，迷糊中听到门响。你走进来，手里端着热粥。",
+      "深夜回家，我在楼梯摔倒了。你听到声音冲出来，蹲下查看我的伤。",
+      "深夜公园长椅上，我哭着给你打电话。你什么都没问，只说：'我马上过来。'",
+      "考试前一晚，我紧张到睡不着。你敲我的窗：'陪你复习。'",
+    ],
+    ancient: [
+      "我染了风寒卧床不起，恍惚中听到脚步声。你端着药碗走进来。",
+      "练功时我走火入魔，你冲过来扶住我，将灵力渡进我体内。",
+      "深夜我独自在院中落泪，你递来手帕，什么都没问。",
+      "雨夜山路，我不慎跌落崖边受了伤。你背起我走了三里路，找到大夫。",
+    ],
+  },
+  'childhood': {
+    modern: [
+      "校门口，你等在老地方。看到我出来，扬手：'今天去哪玩？'",
+      "我搬家那天，你帮我搬箱子，翻出小时候的合影：'还记得这张吗？'",
+      "毕业典礼后，你拉着我去了我们小时候常去的公园。",
+      "我爸妈吵架，我跑到你家按门铃。你开门看到我的眼泪，叹气：'进来吧。'",
+    ],
+    ancient: [
+      "书院放学，你在门外等我，手里拿着一包蜜饯：'给你。'",
+      "我搬离故居那日，你从箱底翻出儿时的木剑：'还记得我们比武那次吗？'",
+      "及笄礼后，你拉着我去了我们儿时玩耍的河边。",
+      "家中变故，我深夜跑到你府上。你看到我狼狈的样子，叹气：'先进来。'",
+    ],
+  },
+  'ambiguous': {
+    modern: [
+      "电梯里只有我们两个，你靠在墙上看我，忽然问：'有喜欢的人吗？'",
+      "深夜街头，我独自往回走。你突然出现在我身后：'一个人不安全。'",
+      "图书馆，你坐到我对面，视线总落在我身上。我抬头，你没躲。",
+      "公司聚餐，你给我夹菜。所有人都看着，你只笑：'多吃点。'",
+    ],
+    ancient: [
+      "花园游廊，只有我们两人。你倚着栏杆看我，忽问：'可有心仪之人？'",
+      "深夜街头，我独自回府。你忽然出现在我身后：'一人行路不安全。'",
+      "藏经阁，你坐到我对面，视线总落在我身上。我抬头看你时，你眼神没有闪躲。",
+      "府中宴席，你给我斟酒。所有人都看着，你只笑：'多饮些，我亲自酿的，不醉人。'",
+    ],
+  },
+  'bickering': {
+    modern: [
+      "教学楼走廊，我故意绕路想避开你，结果在转角撞个正着。你挑眉：'躲我？'",
+      "天台上，我的文件被风吹散。你帮我捡起来，顺便吐槽：'这么笨？'",
+      "食堂排队时你突然插在我前面，我正想发火，你回头递给我一个餐盘。",
+      "街市拥挤，我不小心踩到你。正要道歉，你皱眉：'走路不长眼？'",
+    ],
+    ancient: [
+      "练武场上，我的剑被你挑飞。你捡起来递给我，嘲讽道：'就这？'",
+      "集市上我的包袱被风吹散，你帮我捡起来，顺口抱怨：'毛手毛脚。'",
+      "茶馆里我故意换了座位躲你，你却端着茶直接坐到我对面：'躲什么？'",
+      "街市拥挤，我不小心踩到你。正要道歉，你皱眉：'走路不长眼？'",
+    ],
+  },
+  // 轻度张力类
+  'forbidden': {
+    modern: [
+      "办公室深夜，只剩我们。你关上门，靠近我：'别怕，没人知道。'",
+      "家族聚会上，你的手在桌下握住我的。所有人都在，我不敢动。",
+      "你送我回家，车停在楼下。你没熄火，只是看着我：'进去吧。'",
+      "图书馆最深处的角落，你把我困在书架前，低声：'不会有人发现。'",
+    ],
+    ancient: [
+      "书房深夜，只剩我们。你关上门，靠近我：'别怕，无人知晓。'",
+      "族中宴席，你的手在桌下握住我的。所有人都在，我不敢动。",
+      "你送我回府，马车停在门前。你没放下帘子，只看着我：'进去吧。'",
+      "藏书阁最深处，你把我困在书架前，低声：'不会有人瞧见。'",
+    ],
+  },
+  'contract': {
+    modern: [
+      "律师事务所，你推来一份文件：'签了，一年后离婚。'",
+      "酒店房间，婚礼前夜，你敲我的门：'记住，这只是交易。'",
+      "我搬进你家，你指着客房：'你睡这里，别越界。'",
+      "公司年会，你挽着我的手，凑近耳边：'演好你的角色。'",
+    ],
+    ancient: [
+      "议事厅，你推来一纸婚书：'签了吧，三年后和离。'",
+      "闺房窗外，成婚前夜，你隔着窗棂低声：'记住，这只是联姻。'",
+      "我搬入你府，你指着偏院：'你住那里，各不相扰。'",
+      "族中宴席，你拉着我的手，凑近耳边：'莫要露馅。'",
+    ],
+  },
+  'cat-mouse': {
+    modern: [
+      "我以为甩开了你，但回到家发现你已经坐在我的沙发上。",
+      "电梯门关上前，你伸手挡住门，走了进来。",
+      "我收到一条匿名消息，内容是我今天的行踪。抬头，你就在咖啡馆对面看着我。",
+      "我换了三次路线，还是在死胡同遇到你。你靠着墙笑：'还跑吗？'",
+    ],
+    ancient: [
+      "我以为甩掉了你，回到客栈却发现你已经在我房中等候。",
+      "马车门关上前，你伸手挡住，坐了进来。",
+      "我收到一封密信，写着我今日的行踪。抬头，你就在对面茶楼凭栏而立。",
+      "我换了三条小路，还是在死胡同遇到你。你倚着墙笑：'还逃吗？'",
+    ],
+  },
+  'nurture': {
+    modern: [
+      "我刚搬进你家，你站在门口打量我：'以后听我的。'",
+      "书房里，我考试不及格。你把试卷拍在桌上：'明天开始，我教你。'",
+      "我偷偷化妆出门，你堵在门口，擦掉我的口红：'不许。'",
+      "聚会上有人给我递酒，你接过去喝了：'她还小。'",
+    ],
+    ancient: [
+      "我初入府中，你在厅堂打量我：'往后听我的。'",
+      "书房里，我功课不佳。你把书卷拍在桌上：'明日起，我教你。'",
+      "我偷偷涂脂粉想出门，你堵在门口，擦掉我的胭脂：'不许。'",
+      "宴席上有人给我敬酒，你接过去饮尽：'她年纪尚小。'",
+    ],
+  },
+  // 重度张力类
+  'enemies-to-lovers': {
+    modern: [
+      "任务失败，我们被困在废弃工厂。你靠着墙，嘲讽：'就知道你靠不住。'",
+      "枪口对着枪口，我们在天台对峙。你忽然笑了：'开枪啊。'",
+      "废弃仓库，混乱中我被碎玻璃划伤。你冲过来扶住我，我推开你：'别碰我。'",
+      "安全屋里只有一张床，我们对视半晌。你转身：'我睡地上。'",
+    ],
+    ancient: [
+      "任务失败，我们被困在山洞。你靠着石壁，嘲讽：'就知你不行。'",
+      "剑尖对着剑尖，我们在城楼对峙。你忽然笑了：'动手啊。'",
+      "密林深处，逃亡中我被荆棘划伤跌倒。你冲过来扶住我，我推开你：'别碰我。'",
+      "破庙里只有一张草席，我们对视半晌。你转身：'我守夜。'",
+    ],
+  },
+  'power-imbalance': {
+    modern: [
+      "办公室，你坐在椅子上看着我：'你没有选择。'",
+      "会议结束，你让所有人离开，只留下我：'我们谈谈。'",
+      "总裁办公室，我递交辞呈。你当着我的面撕掉：'我不同意。'",
+      "地下车库，你堵住我的车门：'跟我回去。'",
+    ],
+    ancient: [
+      "书房，你坐在上位看着我：'你别无选择。'",
+      "议事散了，你让所有人退下，只留我：'过来。'",
+      "书房内，我递上解约书。你当着我的面撕掉：'不允。'",
+      "府门外，你挡住我的马车：'随我回去。'",
+    ],
+  },
+  'fake-dating': {
+    modern: [
+      "聚会上，你搂着我的腰，凑近耳边：'配合我演戏。'",
+      "狗仔跟拍，你拉着我躲进小巷，吻了上来。我推你：'你干什么？'",
+      "订婚宴上，你给我戴戒指。手指接触时，你顿了顿。",
+      "回家路上，假装情侣的第三天。你叫我'宝贝'时，声音有点不自然。",
+    ],
+    ancient: [
+      "宴席上，你搂着我的腰，凑近耳边：'配合我做戏。'",
+      "有人窥探，你拉着我躲进花园，吻了上来。我推你：'你放肆！'",
+      "订亲宴上，你为我戴上玉镯。指尖相触时，你顿了顿。",
+      "回府路上，假扮夫妻第三日。你唤我'娘子'时，声音有些不自然。",
+    ],
+  },
+  'redemption': {
+    modern: [
+      "深夜街角，雨中，我看到你蜷缩在便利店门口，浑身是伤。我撑伞走过去。",
+      "你的公寓，我用备用钥匙打开门。你坐在黑暗中，手里握着空酒瓶。听到声音，你僵住了。",
+      "废弃大楼天台，你站在边缘。我推开铁门喊住你，你回头，眼里全是绝望。",
+      "你家门口，我发现你已经三天没出门了。我敲门，里面没有回应。",
+    ],
+    ancient: [
+      "城外破庙，雨中，我看到你倚着门槛，浑身是血。我撑伞走过去。",
+      "你的厢房，我推门而入。你坐在窗前，盯着手中的酒盏发呆。听到声音，你浑身一僵。",
+      "废弃城楼边缘，你站在那里。我爬上楼喊住你，你回头，眼里是绝望。",
+      "你的院门外，我发现你三日未出房门。我敲门，里面没有回应。",
+    ],
+  },
+  'reconciliation': {
+    modern: [
+      "三年后，我在咖啡馆遇到你。你坐在曾经我们约会的老位置，看到我时，你愣住了。",
+      "同学会上，你站在人群里。我们视线相撞，又慌乱移开。",
+      "深夜卧室，我接到一个陌生来电。"喂？"是你的声音。",
+      "机场，我拖着行李箱，回头看到你站在那里。你说：'等你很久了。'",
+    ],
+    ancient: [
+      "三年后，我在茶楼遇到你。你坐在老位置，看到我时愣了愣。",
+      "中秋夜，拱桥上人潮涌动。我于人群中抬头，正对上你的目光。",
+      "书房案前，我收到一封匿名来信，'别来无恙？旧桥相候。' 笔迹一看便知是你。",
+      "渡口，我牵着马，回头看到你立在那里。你说：'我等你许久了。'",
+    ],
+  },
+  'forced-together': {
+    modern: [
+      "废弃仓库，手铐把我们拷在一起。我挣扎：'放开我！'你冷笑：'你以为我想？'",
+      "密室逃脱游戏，门关上了。你看着我：'看来得合作。'",
+      "任务失败，我们被关在同一个房间。你靠着墙：'先想办法出去。'",
+      "电梯突然故障，困住了我们两个。你叹气：'真倒霉。'",
+    ],
+    ancient: [
+      "地牢深处，铁链把我们锁在一起。我挣扎：'放开我！'你冷笑：'你以为我愿意？'",
+      "地牢门关上了，我们被困在一处。你看着我：'看来得合作。'",
+      "任务失败，我们被关在同一间牢房。你靠着墙：'先想法子出去。'",
+      "山洞塌方，困住了我们两个。你叹气：'真是晦气。'",
+    ],
+  },
+  'amnesia': {
+    modern: [
+      "我醒来在医院，你坐在床边。我茫然：'你是谁？'你的手握紧了。",
+      "医院病床上，我翻看手机，你的照片占了一半。我看向你：'我们...认识？'",
+      "医院走廊，你说我们是恋人，但我完全不记得。你拿出情侣戒指：'这是证据。'",
+      "街上，你叫住我。我停下，礼貌地问：'请问是我吗？'",
+    ],
+    ancient: [
+      "医馆厢房，我醒来在榻上，你坐在床边。我茫然：'你是何人？'你握着我的手紧了紧。",
+      "榻上，我翻看房中物什，你的画像占了大半。我看向你：'我们...相识？'",
+      "府中正厅，你说我们是夫妻，但我全然不记得。你取出玉佩：'这是信物。'",
+      "街上，你唤住我。我停下，礼貌地问：'可是在唤我？'",
+    ],
+  },
+};
+
+// ==================== 世界观类型判断 ====================
+
+// ancient类世界观
+const ANCIENT_WORLDS = [
+  'ancient-jianghu',
+  'ancient-cultivation',
+  'ancient-court',
+  'fantasy-court',
+  'fantasy-magic',
+];
+
 /**
- * 根据人设获取开场白池子
+ * 判断世界观类型
  */
-function getOpeningPool(archetypeId: string | null): string[] {
-  if (!archetypeId) {
-    return OPENING_POOLS.healing; // 默认返回治愈日常
+function getWorldType(worldBranchId: string | null): 'modern' | 'ancient' {
+  if (worldBranchId && ANCIENT_WORLDS.includes(worldBranchId)) {
+    return 'ancient';
+  }
+  return 'modern';
+}
+
+// ==================== 主函数 ====================
+
+/**
+ * 根据人设、世界观、关系动态获取开场白池子
+ * 优先级：特殊人设 > 世界观类型 + 关系动态
+ */
+function getOpeningPool(
+  archetypeId: string | null,
+  worldBranchId: string | null,
+  relationId: string | null
+): string[] {
+  // 1. 最高优先级：检查是否是特殊人设
+  if (archetypeId && SPECIAL_ARCHETYPE_TO_POOL[archetypeId]) {
+    const poolKey = SPECIAL_ARCHETYPE_TO_POOL[archetypeId];
+    return SPECIAL_ARCHETYPE_POOLS[poolKey];
   }
 
-  const category = ARCHETYPE_TO_CATEGORY[archetypeId];
-  return OPENING_POOLS[category] || OPENING_POOLS.healing;
+  // 2. 根据世界观确定版本（modern/ancient）
+  const worldType = getWorldType(worldBranchId);
+
+  // 3. 根据关系动态获取对应池子
+  if (relationId) {
+    const poolKey = RELATION_ID_TO_POOL[relationId];
+    if (poolKey && RELATION_POOLS[poolKey]) {
+      return RELATION_POOLS[poolKey][worldType];
+    }
+  }
+
+  // 4. 默认返回日常陪伴的modern版
+  return RELATION_POOLS['daily-companion'].modern;
 }
 
 /**
  * 随机获取一个开场白建议
  */
-export function getRandomOpening(archetypeId: string | null): string {
-  const pool = getOpeningPool(archetypeId);
+export function getRandomOpening(
+  archetypeId: string | null,
+  worldBranchId: string | null,
+  relationId: string | null
+): string {
+  const pool = getOpeningPool(archetypeId, worldBranchId, relationId);
   const randomIndex = Math.floor(Math.random() * pool.length);
   return pool[randomIndex];
 }
 
 /**
- * 获取所有开场白建议（返回匹配池中的所有选项）
+ * 获取所有开场白建议
  */
-export function getOpeningSuggestions(archetypeId: string | null): string[] {
-  return getOpeningPool(archetypeId);
+export function getOpeningSuggestions(
+  archetypeId: string | null,
+  worldBranchId: string | null,
+  relationId: string | null
+): string[] {
+  return getOpeningPool(archetypeId, worldBranchId, relationId);
 }
