@@ -157,7 +157,7 @@ export const RELATIONS: RelationTheme[] = [
         label: '依赖平衡',
         start: '守护姿态：一方居高临下给予照顾',
         turn:  '依赖滋生：被照顾者学会回应或反抗',
-        end:   '权力平衡：从主仆变恋人，从依赖变选择'
+        end:   '权力平衡：从监护者变恋人，从依赖变选择'
       }
     ],
   },
