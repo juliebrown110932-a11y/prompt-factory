@@ -8,7 +8,7 @@ import { getRandomOpening } from '@/app/utils/openingHints';
 
 export default function NameAndOpeningSuggestion() {
   const { current, setBlock } = usePromptBlocks();
-  const { archetypeId, worldBranchId, characterMotherId } = useSelectionStore();
+  const { archetypeId, worldBranchId, relationThemeId, characterMotherId } = useSelectionStore();
   const [localName, setLocalName] = useState(current.characterName || '');
   const [localOpening, setLocalOpening] = useState(current.openingLine || '');
 
@@ -19,9 +19,9 @@ export default function NameAndOpeningSuggestion() {
     setBlock('characterName', name);
   };
 
-  // 随机生成开场句（基于人设）
+  // 随机生成开场句（基于人设、世界观、关系）
   const randomOpening = () => {
-    const opening = getRandomOpening(archetypeId);
+    const opening = getRandomOpening(archetypeId, worldBranchId, relationThemeId);
     setLocalOpening(opening);
     setBlock('openingLine', opening);
   };
