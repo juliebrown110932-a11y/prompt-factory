@@ -80,3 +80,16 @@ body {
 .slider-thumb::-moz-range-thumb:active {
   transform: scale(0.95);
 }
+
+/* Shake animation for donation bubble tea */
+@keyframes shake {
+  0%, 100% { transform: rotate(-8deg); }
+  25% { transform: rotate(8deg); }
+  50% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.animate-shake {
+  animation: shake 2s ease-in-out infinite;
+  display: inline-block;
+}
