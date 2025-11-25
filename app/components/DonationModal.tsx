@@ -41,15 +41,17 @@ export default function DonationModal({ isOpen, onClose, trigger = 'button' }: D
           </p>
         </div>
 
-        {/* 二维码区域 - 简化版 */}
-        <div className="flex justify-center mb-4">
+        {/* 微信二维码 */}
+        <div className="flex flex-col items-center mb-4">
           <img
-            src="/donation-qr.png"
-            alt="打赏二维码"
-            className="max-w-full h-auto rounded-lg"
-            style={{ maxHeight: '200px' }}
+            src="/wechat-qr.png"
+            alt="微信打赏"
+            className="w-48 h-48 rounded-lg shadow-md"
             onContextMenu={(e) => e.preventDefault()}
           />
+          <p className="text-xs text-gray-500 mt-2">
+            微信扫码 ｜ 截图保存用微信扫一扫
+          </p>
         </div>
 
         {/* 底部文案 - 带晃动奶茶 */}
