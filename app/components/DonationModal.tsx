@@ -47,7 +47,7 @@ export default function DonationModal({ isOpen, onClose, trigger = 'button' }: D
             onContextMenu={(e) => e.preventDefault()}
           />
           <p className="text-xs text-gray-500 mt-2">
-            微信扫码 ｜ 截图保存用微信扫一扫
+            微信扫码 ｜ 截图保存识别二维码
           </p>
         </div>
 
