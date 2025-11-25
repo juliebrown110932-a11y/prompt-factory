@@ -19,7 +19,6 @@ export default function DonationModal({ isOpen, onClose, trigger = 'button' }: D
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="relative max-w-md w-full bg-white rounded-2xl shadow-2xl p-6">
-        {/* 关闭按钮 */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
@@ -30,7 +29,6 @@ export default function DonationModal({ isOpen, onClose, trigger = 'button' }: D
           </svg>
         </button>
 
-        {/* 标题 */}
         <div className="text-center mb-4">
           <div className="text-4xl mb-3">⚡</div>
           <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -41,18 +39,18 @@ export default function DonationModal({ isOpen, onClose, trigger = 'button' }: D
           </p>
         </div>
 
-        {/* 二维码区域 - 简化版 */}
-        <div className="flex justify-center mb-4">
+        <div className="flex flex-col items-center mb-4">
           <img
-            src="/donation-qr.png"
-            alt="打赏二维码"
-            className="max-w-full h-auto rounded-lg"
-            style={{ maxHeight: '200px' }}
+            src="/wechat-qr.png"
+            alt="微信打赏"
+            className="w-48 h-48 rounded-lg shadow-md"
             onContextMenu={(e) => e.preventDefault()}
           />
+          <p className="text-xs text-gray-500 mt-2">
+            微信扫码 ｜ 截图保存用微信扫一扫
+          </p>
         </div>
 
-        {/* 底部文案 - 带晃动奶茶 */}
         <p className="text-center text-gray-600 text-sm">
           如果觉得用着不错，要不要请杯奶茶？
           <span className="inline-block ml-1 animate-shake text-lg">🧋</span>
