@@ -10,6 +10,7 @@ import { WorldStep } from '@/app/components/steps/WorldStep';
 import { SelectionPreview } from '@/app/components/SelectionPreview';
 import PromptResult from '@/app/components/PromptResult';
 import GoldenPresetModal from '@/app/components/GoldenPresetModal';
+import DonationButton from '@/app/components/DonationButton';
 import { generatePrompt } from '@/app/utils/promptGenerator';
 import type { IntroTone } from '@/app/utils/introComposer';
 import type { EmotionParams } from '@/app/utils/emotionRewriter';
@@ -230,6 +231,9 @@ export default function Home() {
         isOpen={showPresetModal}
         onClose={() => setShowPresetModal(false)}
       />
+
+      {/* 浮动打赏按钮 */}
+      <DonationButton />
     </>
   );
 }
