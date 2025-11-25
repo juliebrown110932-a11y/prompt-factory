@@ -7,7 +7,6 @@ export default function DonationButton() {
 
   return (
     <>
-      {/* 浮动按钮 - 改到左下角 */}
       <div
         className="fixed bottom-6 left-6 z-40"
         onMouseEnter={() => setIsHovered(true)}
@@ -22,7 +21,6 @@ export default function DonationButton() {
             <span className="text-2xl">🧋</span>
           </div>
 
-          {/* 悬浮提示 - 调整位置适配左侧 */}
           <div className={`absolute bottom-full left-0 mb-2 transition-all transform ${
             isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
           }`}>
@@ -32,7 +30,6 @@ export default function DonationButton() {
             </div>
           </div>
 
-          {/* 脉冲动画 */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 animate-ping opacity-30"></div>
         </button>
       </div>
