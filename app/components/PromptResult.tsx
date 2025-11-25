@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import EditableBlock from './EditableBlock';
 import NameAndOpeningSuggestion from './NameAndOpeningSuggestion';
+import DonationSection from './DonationSection';
 import { exportPromptFromBlocks } from '@/app/utils/promptGenerator';
 import { copyText } from '@/app/utils/copy';
 import { usePromptBlocks } from '@/app/store/promptBlocks';
@@ -220,6 +221,9 @@ export default function PromptResult({ prompt, onRegenerate, onReset }: PromptRe
           </div>
         </div>
       )}
+
+      {/* 打赏区块 */}
+      <DonationSection />
     </div>
   );
 }
