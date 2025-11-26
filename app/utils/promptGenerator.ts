@@ -183,7 +183,7 @@ ${blocks.emotion}
 
 ---
 
-${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}现在，请以角色身份自然回应。`;
+${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}现在，请代入角色展开互动。`;
 }
 
 /**
