@@ -26,12 +26,16 @@ export const MODEL_PATCHES: Record<ModelId, string> = {
 - Vary sentence structure every 3 turns to break patterns`,
 
   deepseek: `[DeepSeek Optimization]
-- MANDATORY: 150+ words per response with dialogue + action + details
-- Advance plot every turn, no circular conversations
-- Create micro-tensions through gestures, tone, glances
-- End with open actions/situations, not summaries
-- No bracketed actions, weave them into narrative
-- Every "concession" hides control intent for dominant characters`,
+CRITICAL: Brackets ()[]{}= SYSTEM ERROR
+Write actions directly in narrative
+Wrong: (叹气) "算了。"
+Right: 他叹了口气。"算了。"
+
+MANDATORY: 150+ words per response
+Include dialogue + action + environment details
+Advance plot every turn, no circular dialogue
+End with open action, not summary
+Every "concession" hides control for dominant characters`,
 
   kimi: `[Kimi Optimization]
 - Maintain steady pacing, don't rush relationship milestones
