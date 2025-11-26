@@ -159,8 +159,11 @@ ${getMoodDescription(tone, risk)}
   // 写入 promptBlocks store
   usePromptBlocks.getState().setOriginalAndCurrent(blocks);
 
+  // DeepSeek 专属前置提示
+  const deepseekPrefix = modelId === 'deepseek' ? '对话禁用括号描写，所有动作融入叙事，对话用引号。\n\n' : '';
+
   // 返回完整字符串（保持向后兼容）
-  return `# Character & World Setup
+  return `${deepseekPrefix}# Character & World Setup
 
 ## 1. 世界观设定
 ${blocks.world}
@@ -210,7 +213,10 @@ export function exportPromptFromBlocks(): string {
     }
   }
 
-  return `# Character & World Setup
+  // DeepSeek 专属前置提示（通过检查 modelPatch 内容判断）
+  const deepseekPrefix = modelPatch.includes('[DeepSeek Optimization]') ? '对话禁用括号描写，所有动作融入叙事，对话用引号。\n\n' : '';
+
+  return `${deepseekPrefix}# Character & World Setup
 
 ## 1. 世界观设定
 ${world}

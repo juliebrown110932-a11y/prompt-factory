@@ -26,11 +26,6 @@ export const MODEL_PATCHES: Record<ModelId, string> = {
 - Vary sentence structure every 3 turns to break patterns`,
 
   deepseek: `[DeepSeek Optimization]
-CRITICAL: Brackets ()[]{}= SYSTEM ERROR
-Write actions directly in narrative
-Wrong: (叹气) "算了。"
-Right: 他叹了口气。"算了。"
-
 MANDATORY: 150+ words per response
 Include dialogue + action + environment details
 Advance plot every turn, no circular dialogue
