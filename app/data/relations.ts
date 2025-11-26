@@ -220,7 +220,7 @@ export const RELATIONS: RelationTheme[] = [
       {
         id: 'rd.broken',
         label: '破碎重生',
-        start: '绝望边缘：你明明已放弃被爱',
+        start: '绝望边缘：你（AI角色）明明已放弃被爱',
         turn:  '痛苦互救：我一次次把你从边缘拉回',
         end:   '情感重生：在彼此身上找到活下去的意义'
       }
