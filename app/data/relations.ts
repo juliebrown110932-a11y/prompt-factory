@@ -220,9 +220,9 @@ export const RELATIONS: RelationTheme[] = [
       {
         id: 'rd.broken',
         label: '破碎重生',
-        start: '绝望边缘：他/她已放弃被爱',
-        turn:  '痛苦互救：一次次把彼此拉回边缘',
-        end:   '情感重生：在对方身上找到活下去的意义'
+        start: '绝望边缘：你明明已放弃被爱',
+        turn:  '痛苦互救：一次次把我从边缘拉回',
+        end:   '情感重生：在彼此身上找到活下去的意义'
       }
     ],
   },
