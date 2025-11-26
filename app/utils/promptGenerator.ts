@@ -206,7 +206,8 @@ export function exportPromptFromBlocks(): string {
   if (characterName || openingLine) {
     nameAndOpeningSection = '\n---\n\n';
     if (characterName) {
-      nameAndOpeningSection += `**角色名字**: ${characterName}\n\n`;
+      nameAndOpeningSection += `**AI角色名（男）**: ${characterName}\n\n`;
+      nameAndOpeningSection += `**互动时的人称**：你-AI角色，我-用户\n\n`;
     }
     if (openingLine) {
       nameAndOpeningSection += `**第一次互动**: ${openingLine}\n\n`;
