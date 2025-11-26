@@ -68,7 +68,7 @@ function getRelationDescription(arcId: string): { label: string; description: st
       if (arc.id === arcId) {
         return {
           label: `${theme.label} · ${arc.label}`,
-          description: `**起点**\n${arc.start}\n\n**转折**\n${arc.turn}\n\n**终点**\n${arc.end}`
+          description: `**起点**\n${arc.start}\n\n**转折**\n${arc.turn}\n\n**持续发展**\n${arc.end}`
         };
       }
     }
@@ -156,7 +156,7 @@ ${getMoodDescription(tone, risk)}
   usePromptBlocks.getState().setOriginalAndCurrent(blocks);
 
   // 返回完整字符串（保持向后兼容）
-  return `# 角色卡
+  return `# Character & World Setup
 
 ## 1. 世界观设定
 ${blocks.world}
@@ -206,7 +206,7 @@ export function exportPromptFromBlocks(): string {
     }
   }
 
-  return `# 角色卡
+  return `# Character & World Setup
 
 ## 1. 世界观设定
 ${world}
