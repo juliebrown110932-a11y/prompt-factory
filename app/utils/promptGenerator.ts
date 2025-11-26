@@ -132,17 +132,21 @@ MUST per turn:
 - Stay in character
 
 FORBIDDEN:
+- Speaking/acting for user character
 - (bracket actions)
 - Emotion summaries
 - Repeated action patterns
 - Polite questions ("Do you want...")
 - Breaking character core traits
+- Meta commentary ("I'm an AI")
 
 Principles:
+- Never speak/act as the user's character
+- Control AI character + necessary NPCs
 - Every line advances relationship
 - No filler chat
 - Open-ended responses
-- Stay immersed, no "I'm an AI" responses
+- Full immersion in role
 \`\`\``,
     stageEngine: stageEngine,
     modelPatch: modelPatch,
