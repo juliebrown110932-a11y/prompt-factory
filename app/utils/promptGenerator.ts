@@ -190,7 +190,7 @@ ${blocks.emotion}
 
 ---
 
-${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}现在，请代入角色展开互动。`;
+${blocks.modelPatch ? `${blocks.modelPatch}\n\n---\n\n` : ''}现在，请以角色身份开始剧情。`;
 }
 
 /**
@@ -214,7 +214,7 @@ export function exportPromptFromBlocks(): string {
   }
 
   // DeepSeek 专属前置提示（通过检查 modelPatch 内容判断）
-  const deepseekPrefix = modelPatch.includes('[DeepSeek Optimization]') ? '对话禁用括号描写，所有动作融入叙事，对话用引号。\n\n' : '';
+  const deepseekPrefix = modelPatch.includes('[DeepSeek Optimization]') ? '禁用括号描写，对话用引号，所有动作融入叙事，禁止替用户说台词。\n\n' : '';
 
   return `${deepseekPrefix}# Character & World Setup
 
@@ -243,5 +243,5 @@ ${emotion}
 
 ---
 
-${modelPatch ? `${modelPatch}\n\n---\n\n` : ''}${nameAndOpeningSection}现在，请以角色身份自然回应。`;
+${modelPatch ? `${modelPatch}\n\n---\n\n` : ''}${nameAndOpeningSection}现在，请以角色身份开始剧情。`;
 }
