@@ -10,6 +10,22 @@ const NAME_POOLS = {
     '塞巴斯',
     '卡莱尔',
   ],
+  god: [
+    '塞勒斯',
+    '格里安',
+    '瓦伦',
+    '卡莱尔',
+    '米迦勒',
+    '拉斐尔',
+  ],
+  demon: [
+    '艾泽尔',
+    '路西恩',
+    '塞巴斯',
+    '奥斯汀',
+    '别西卜',
+    '梅菲斯特',
+  ],
   ancient: [
     '慕尘',
     '沈昭',
@@ -86,8 +102,8 @@ const WORLD_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
 const FORCE_ARCHETYPE_TO_NAME_POOL: Record<string, keyof typeof NAME_POOLS> = {
   // 西幻名字（无论什么世界观）
   'villain-fallen': 'fantasy',      // 堕落黑天使
-  'non-human-god': 'fantasy',       // 神明
-  'non-human-demon': 'fantasy',     // 恶魔
+  'non-human-god': 'god',           // 神明
+  'non-human-demon': 'demon',       // 恶魔
 
   // 科幻名字（无论什么世界观）
   'non-human-ai': 'scifi',          // AI
